@@ -100,6 +100,27 @@ public class Player implements Dice{
          position = moveOptions[i];
          if(position.getRoomType().equals("Scene")){
             Role takeRole = chooseRole();
+         }else if (position.getRoomType().equals("Casting Office")){
+               System.out.println("You are in the Casting Office, what rank would you like to upgrade to? Enter 0 for no upgrade");
+               System.out.print("2 is $4 or 5 credits, 3 is $10 or 10 credits, 4 is $18 or 15 credits, 5 is $28 dollars or 20 credits, 6 is $40 or 25 credits");
+               Scanner darkly = new Scanner(System.in);
+               int wantedRank = 1;
+               boolean okInput = false;
+               try{
+                     while (!okInput){
+                           wantedRank = darkly.nextInt();
+                           if (wantedRank == 0 || (wantedRank >= 2 && wantedRank <= 6)){
+                                 okInput = true;
+                           }else{
+                                 System.out.println("Wrong value given, please enter 0 for no rank upgrade or a value between 2 and 6: ");
+                           }
+                     }
+               }catch (InputMismatchException e){
+                     System.out.println("Wrong form of input, no rank upgrade will be done.");
+               }
+               if (wantedRank != 0){
+                     rank = upgrRank(wantedRank);
+               }  
          }
       }else{
          System.out.println("You can't move, you're acting!");
@@ -121,10 +142,10 @@ public class Player implements Dice{
         while(!inputGood){
           String input = getInput();
           UtilityScene castingOffice = (UtilityScene)position;
-          if(input.equals("money") && (this.money > castingOffice.improveRank(newrank))){
+          if(input.equals("money") && (this.money > castingOffice.improveRank(newrank, "money"))){
             setRank(newrank);
             inputGood = true;
-          }else if(input.equals("credit") && (this.credits > castingOffice.improveRank(newrank))){
+          }else if(input.equals("credit") && (this.credits > castingOffice.improveRank(newrank, "credit"))){
             setRank(newrank);
             inputGood = true;
           }else if(input.equals("quit")){
