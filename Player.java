@@ -13,16 +13,16 @@ public class Player implements Dice{
    private boolean turnOver = false;
    
    //Constructors
-   public Player(int startCredits, int startRank){
+   public Player(int startCredits, int startRank, Room trailers){
       rank = startRank;
       credits = startCredits;
-      position = Trailers;
+      position = trailers;
    }
-   public Player(){
+   public Player(Room trailers){
       rank = 1;
       credits = 0;
       money = 0;
-      position = Trailers;
+      position = trailers;
    }
    
    //Getters and setters
@@ -49,6 +49,7 @@ public class Player implements Dice{
       for(int i = 0; i < numDice; i++){
          values[i] = d6.nextInt(6) + 1;         
       }
+      return values;
    }
    
    public int rehearse(){
@@ -65,16 +66,18 @@ public class Player implements Dice{
       if(isActing()){
          //check scene is not done
          //get budget
-         int budget;
+         SceneRoom actingRoom = (SceneRoom)position;
+         int budget = actingRoom.getBudget();
          int[] actRoll = rollDice(1);
          actRoll[1] = actRoll[1] + rehearsalcount;
          if(budget <= actRoll[1]){
-            position.decrementShotCount();
+            actingRoom.decrementShotCount();
          }
       }
+      return 1;
    }
    
-   public Room move(){
+   public void move(){
       if(!isActing()){
          turnOver = true;
          Room[] moveOptions = this.position.getAdjacentRooms();
@@ -117,10 +120,11 @@ public class Player implements Dice{
         System.out.println("Do you want to pay for your new rank with money or credit?");
         while(!inputGood){
           String input = getInput();
-          if(input.equals("money") && (this.money > this.position.improveRank())){
+          UtilityScene castingOffice = (UtilityScene)position;
+          if(input.equals("money") && (this.money > castingOffice.improveRank(newrank))){
             setRank(newrank);
             inputGood = true;
-          }else if(input.equals("credit") && (this.credits > this.position.improveRank(newrank))){
+          }else if(input.equals("credit") && (this.credits > castingOffice.improveRank(newrank))){
             setRank(newrank);
             inputGood = true;
           }else if(input.equals("quit")){
@@ -132,6 +136,7 @@ public class Player implements Dice{
           }
         }
     }
+    return newrank;
   }
   
    //Helper function!

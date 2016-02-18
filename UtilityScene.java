@@ -10,7 +10,7 @@ public class UtilityScene extends Room{
 		return utilityType; 
 	}
 	
-	public Boolean improveRank(int rankWanted) {
+	public int improveRank(int rankWanted) {
 		switch(rankWanted) {
 			case 2:
 				break; 
@@ -25,7 +25,7 @@ public class UtilityScene extends Room{
 			
 		}
 
-    return true;
+    return 0;
 	}
 	
 }

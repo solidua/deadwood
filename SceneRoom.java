@@ -17,6 +17,10 @@ public class SceneRoom extends Room {
     roleThree = thirdRole;
     roleFour = fourthRole; 
 	}
+   
+   public int getBudget(){
+       return currentCard.getBudget();
+   }
 
 	public int getShotCount() {
 		return shotCount; 
