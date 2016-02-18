@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-
-=======
-package deadwood1;
->>>>>>> 986beb67bc4893f11263ac7c17db6e08fa1a0bdc
-
 public class Room {
 	private String roomName;  
 	private String roomType; 
@@ -32,14 +26,10 @@ public class Room {
 	public Room[] getAdjacentRooms() {
 		return adjacentRooms; 
 	}
-<<<<<<< HEAD
   
   public void setAdjacentRooms(Room[] adjacent) {
       adjacentRooms = adjacent;
   }
-=======
->>>>>>> 986beb67bc4893f11263ac7c17db6e08fa1a0bdc
-
 	public String getRoomType() {
 		return roomType; 
 	}
