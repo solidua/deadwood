@@ -64,14 +64,14 @@ public class Player implements Dice{
    
    public int act(){
       if(isActing()){
-         //check scene is not done
-         //get budget
          SceneRoom actingRoom = (SceneRoom)position;
-         int budget = actingRoom.getBudget();
-         int[] actRoll = rollDice(1);
-         actRoll[1] = actRoll[1] + rehearsalcount;
-         if(budget <= actRoll[1]){
-            actingRoom.decrementShotCount();
+         if(actingRoom.getShotCount() > 0){
+            int budget = actingRoom.getBudget();
+            int[] actRoll = rollDice(1);
+            actRoll[1] = actRoll[1] + rehearsalcount;
+            if(budget <= actRoll[1]){
+               actingRoom.decrementShotCount();
+            }
          }
       }
       return 1;
@@ -128,10 +128,43 @@ public class Player implements Dice{
    }
    
    private Role chooseRole(){
-      //list roles separated by ones player is high enough rank to take and those he can't take
-      Role roleTaken = null;
-      String input = getInput();
+      SceneRoom actingRoom = (SceneRoom)position;
+      Role[] availableRoles = actingRoom.gotVisited();
+      Role[] goodRoles = printRoles(availableRoles);
+      System.out.println("Choose your role by typing in its name, or quit to not take a role.");
+      boolean inputGood = false;
+      int numGoodRoles = goodRoles.length(); 
+      while(!inputGood){
+         String input = getInput();
+         for(int i = 0; i < numGoodRoles; i++){
+            if(input.equals(goodRoles[i].getName()){
+               inputGood = true;
+            }
+         }
+      }
+      Role roleTaken = goodRoles[i];
+      roleTaken.setTaken(true);
       return roleTaken;
+   }
+   
+   private Role[] printRoles(Role[] allRoles){
+      System.out.println("The following roles are available to you:");
+      Role[] goodRoles;
+      int k = 0;
+      for(int i = 0; i < 7; i++){
+         if(!allRoles[i].getTaken() && (allRoles[i].getLevel() <= rank){
+            System.out.println("\t", allRoles[i].getName());
+            goodRoles[k] = allRoles[i];
+            k++;
+         }
+      }
+      System.out.println("The following roles are either taken or too high rank for you!");
+      for(int i = 0; i < 7; i++){
+         if(allRoles[i].getTaken || (allRoles[i].getLevel() > rank){
+            System.out.println("\t", allRoles[i].getName());
+         }
+      }
+      return goodRoles;
    }
 
    //Must be in utility room, specifically Casting Office to work
