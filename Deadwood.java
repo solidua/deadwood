@@ -40,6 +40,17 @@ class Deadwood{
         Player[] players = initializePlayers(numPlayers, trailers);
         while (numDays != 0){
             int scenesShot = 0;
+            //Initialize cards for each day
+            int numRooms = rooms.length();
+            Random cardPicker = new Random();
+            for(int i = 0; i < numRooms; i++){
+               int cardChosen = cardPicker.nextInt(40);
+               while(cardArary[cardChosen].getUsed()){
+                  cardChosen = (cardChosen + 1) % 40;
+               }
+               rooms[i].setCard(cardArray[cardChosen]);
+               cardArray[cardChosen].setUsed;
+            }
             while (scenesShot < 9){
                   for (int i = 0; i < players.length; i++){
                         if (!players[i].isActing())
