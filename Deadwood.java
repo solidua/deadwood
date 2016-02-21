@@ -49,14 +49,37 @@ class Deadwood{
                   cardChosen = (cardChosen + 1) % 40;
                }
                rooms[i].setCard(cardArray[cardChosen]);
-               cardArray[cardChosen].setUsed;
+               cardArray[cardChosen].setUsed();
             }
             while (scenesShot < 9){
+                  Scanner inRead = new Scanner(System.in);
                   for (int i = 0; i < players.length; i++){
+                        System.out.println("Player " + i + " it is your turn.");
+                        if(players[i].getPosition().getName().equals("Casting Office")){
+                           System.out.println("You may upgrade your rank before you move.");
+                           int newRank = inRead.nextInt();                          
+                           players[i].upgrRank(newRank);
+                        }
                         if (!players[i].isActing())
                         {
-                             System.out.println("Player " + i + " it is your turn.");
-                             players[i].move();
+                            players[i].move();
+                        }else{
+                           System.out.println("You may act or rehearse your role.");
+                           boolean okInput = false;
+                           while(!okInput){
+                              String input = inRead.nextLine();
+                              if(input.equals("act")){
+                                 okInput = true;
+                                 players[i].act();
+                              }else if(input.equals("rehearse")){
+                                 okInput = true;
+                                 players[i].rehearse();
+                              }else if(input.equals("quit")){
+                                 okInput = true;                              
+                              }else{
+                                 System.out.println("That was incorrect input, type 'act' or 'rehearse' to continue, or 'quit' to stop.");
+                              }
+                           }
                         }
                   }
             }
