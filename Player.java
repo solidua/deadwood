@@ -15,6 +15,7 @@ public class Player implements Dice{
    //Constructors
    public Player(int startCredits, int startRank, Room trailers){
       rank = startRank;
+      money = 0;
       credits = startCredits;
       position = trailers;
    }
@@ -40,6 +41,9 @@ public class Player implements Dice{
    }
    public boolean isActing(){
       return acting;
+   }
+   public Room getPosition(){
+      return position;
    }
    
    public int[] rollDice(int numDice){
@@ -100,6 +104,7 @@ public class Player implements Dice{
          position = moveOptions[i];
          if(position.getRoomType().equals("Scene")){
             Role takeRole = chooseRole();
+            //Find out what rank they want to go to
          }else if (position.getRoomType().equals("Casting Office")){
                System.out.println("You are in the Casting Office, what rank would you like to upgrade to? Enter 0 for no upgrade");
                System.out.print("2 is $4 or 5 credits, 3 is $10 or 10 credits, 4 is $18 or 15 credits, 5 is $28 dollars or 20 credits, 6 is $40 or 25 credits");
@@ -137,7 +142,7 @@ public class Player implements Dice{
       while(!inputGood){
          String input = getInput();
          for(int i = 0; i < numGoodRoles; i++){
-            if(input.equals(goodRoles[i].getName()){
+            if(input.equals(goodRoles[i].getName())){
                inputGood = true;
             }
          }
@@ -152,7 +157,7 @@ public class Player implements Dice{
       Role[] goodRoles;
       int k = 0;
       for(int i = 0; i < 7; i++){
-         if(!allRoles[i].getTaken() && (allRoles[i].getLevel() <= rank){
+         if(!allRoles[i].getTaken() && (allRoles[i].getLevel() <= rank)){
             System.out.println("\t", allRoles[i].getName());
             goodRoles[k] = allRoles[i];
             k++;
@@ -160,20 +165,23 @@ public class Player implements Dice{
       }
       System.out.println("The following roles are either taken or too high rank for you!");
       for(int i = 0; i < 7; i++){
-         if(allRoles[i].getTaken || (allRoles[i].getLevel() > rank){
+         if(allRoles[i].getTaken || (allRoles[i].getLevel() > rank)){
             System.out.println("\t", allRoles[i].getName());
          }
       }
       return goodRoles;
    }
 
-   //Must be in utility room, specifically Casting Office to work
+   //ask player if they want to pay with money or credit
    public int upgrRank(int newrank){
       boolean inputGood = false;
-      if(this.position.getRoomType().equals("Utility")){
+      Scanner scanInput = new Scanner(System.in);      
+      if(this.position.getRoomType().equals("Csating Office")){
         System.out.println("Do you want to pay for your new rank with money or credit?");
         while(!inputGood){
-          String input = getInput();
+
+          System.out.println("You currently have " + credits + " credits and " + money + " dollars.");
+          int input = getInput();
           UtilityScene castingOffice = (UtilityScene)position;
           if(input.equals("money") && (this.money > castingOffice.improveRank(newrank, "money"))){
             setRank(newrank);
@@ -183,7 +191,7 @@ public class Player implements Dice{
             inputGood = true;
           }else if(input.equals("quit")){
             inputGood = true;
-          }else if(!input.equals("credit") || !input.equals("money")){
+          }else if(!input.equals("credit") && !input.equals("money")){
             System.out.println("Wrong input! Please input either money or credit for your preferred method of payment!");
           }else{
             System.out.println("You don't have sufficient money/credit for that! Please choose a different payment method or type 'quit' to stop");
