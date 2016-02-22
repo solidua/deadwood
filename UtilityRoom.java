@@ -4,13 +4,16 @@ public class UtilityRoom extends Room{
 
 	private String utilityType; 
 	
-	public UtilityRoom(String type) {
-		utilityType = type; 
+	public UtilityRoom(String utilType, String name, String type) {
+		roomName = name;
+		roomType = type; 
+		utilityType = utilType; 
 	}
 	
 	public String getType() {
 		return utilityType; 
 	}
+	
 	
 	public int improveRank(int rankWanted, String payment) {
 		switch(rankWanted) {

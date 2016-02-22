@@ -4,39 +4,48 @@ class Card{
     private int budget;
     private String title;
     private String description;
-    private Role roleOne;
-    private Role roleTwo;
-    private Role roleThree;
+    private Role[] cardRoles; 
     private boolean beenUsed;
 
     public Card (){
         budget = 0;
         title = null;
         description = null;
-        roleOne = null;
-        roleTwo = null;
-        roleThree = null;
         beenUsed = false;
+    }
+    
+    public Card (int money, Role firstRole, String name, String explanation){
+        budget = money;
+        title = name;
+        description = explanation;
+        beenUsed = false;
+        cardRoles = new Role[]{firstRole}; 
+    }
+    
+    public Card (int money, Role firstRole, Role secondRole, String name, String explanation){
+        budget = money;
+        title = name;
+        description = explanation;
+        beenUsed = false;
+        cardRoles = new Role[]{firstRole, secondRole}; 
     }
 
     public Card (int money, Role firstRole, Role secondRole, Role thirdRole, String name, String explanation){
         budget = money;
-        roleOne = firstRole;
-        roleTwo = secondRole;
-        roleThree = thirdRole;
         title = name;
         description = explanation;
         beenUsed = false;
+        cardRoles = new Role[]{firstRole, secondRole, thirdRole}; 
     }
+    
     public int getBudget(){
         return budget;
     }
     public Role[] getRoles(){
-        Role[] roleArray ={roleOne, roleTwo, roleThree};
-        return roleArray;
+        return cardRoles; 
     }
     public String getTitle(){
-        return  title;
+        return title;
     }
     public String getDescription(){
         return description;
@@ -49,5 +58,14 @@ class Card{
     }
     public void roleTaken(Role takenRole){
         takenRole.setTaken(true);
+    }
+    
+    public boolean isARoleTaken() {
+    	for(Role role : cardRoles) {
+    		if (role.getTaken()) {
+    			return true; 
+    		}
+    	}
+    	return false; 
     }
 }

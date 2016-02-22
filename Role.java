@@ -5,6 +5,7 @@ class Role{
   private int level;
   private String phrase;
   private boolean taken;
+  private boolean onCard; 
   
   public Role (){
       name = null;
@@ -12,11 +13,12 @@ class Role{
       phrase = null;
       taken = false;
   }
-  public Role (String moniker, int stat, String saying){
+  public Role (String moniker, int stat, String saying, boolean onCard){
       name = moniker;
       level = stat;
       phrase = saying;
       taken = false;
+      this.onCard = onCard; 
   }
   public String getName(){
       return name;
@@ -41,5 +43,9 @@ class Role{
   }
   public void setTaken(boolean newTaken){
       taken = newTaken;
+  }
+  
+  public boolean getOnCard() {
+	  return onCard; 
   }
 }
