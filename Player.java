@@ -42,6 +42,9 @@ public class Player implements Dice{
    public boolean isActing(){
       return acting;
    }
+   public void setActing(boolean input){
+      acting = input;
+   }
    public Room getPosition(){
       return position;
    }
@@ -69,6 +72,7 @@ public class Player implements Dice{
    public int act(){
       if(isActing()){
          SceneRoom actingRoom = (SceneRoom)position;
+         //If the scene is not done
          if(actingRoom.getShotCount() > 0){
             int budget = actingRoom.getBudget();
             int[] actRoll = rollDice(1);
@@ -76,17 +80,22 @@ public class Player implements Dice{
             if(budget <= actRoll[1]){
                actingRoom.decrementShotCount();
             }
+         }else{
+            //The scene is done!
+            setActing(false);
          }
       }
       return 1;
    }
    
    public void move(){
+      //If not acting, turn will be over at end of this action
       if(!isActing()){
          turnOver = true;
          Room[] moveOptions = this.position.getAdjacentRooms();
          int numAdjRooms = moveOptions.length;
          boolean inputGood = false;
+         //Declared out here so we can use it later
          int i;
          System.out.println("The adjacent rooms you can move to are:");
          for(i = 0; i < numAdjRooms; i++){
@@ -104,8 +113,8 @@ public class Player implements Dice{
          position = moveOptions[i];
          if(position.getRoomType().equals("Scene")){
             Role takeRole = chooseRole();
-            //Find out what rank they want to go to
          }else if (position.getRoomType().equals("Casting Office") && rank < 6){
+               //Find out what rank they want to go to
                Scanner darkly = new Scanner(System.in);
                boolean upgrading = true;
                System.out.println("You are in the Casting Office, what rank would you like to upgrade to? Enter 0 for no upgrade");
@@ -126,9 +135,11 @@ public class Player implements Dice{
                   }catch (InputMismatchException e){
                         System.out.println("Wrong form of input, no rank upgrade will be done.");
                   }
+                  //Rank the player said they wanted to go to and that was given to upgrRank
                   if (wantedRank != 0){                        
                         saveRank = upgrRank(wantedRank);                        
                   }
+                  //If we successfully got a new rank from upgrRank, then we are done upgrading
                   if(saveRank > 0){
                      upgrading = false;
                      rank = saveRank;
@@ -140,6 +151,7 @@ public class Player implements Dice{
       }      
    }
    
+   //Handles all of choosing role, input taken inside this function for this
    private Role chooseRole(){
       SceneRoom actingRoom = (SceneRoom)position;
       Role[] availableRoles = actingRoom.gotVisited();
@@ -170,6 +182,7 @@ public class Player implements Dice{
       Role[] goodRoles = new Role[7];
       int k = 0;
       for(int i = 0; i < 7; i++){
+         //Print the roles that aren't taken and of a level less than the rank
          if(!allRoles[i].getTaken() && (allRoles[i].getLevel() <= rank)){
             System.out.println("\t" + allRoles[i].getName());
             goodRoles[k] = allRoles[i];
@@ -178,6 +191,7 @@ public class Player implements Dice{
       }
       System.out.println("The following roles are either taken or too high rank for you!");
       for(int i = 0; i < 7; i++){
+         //Print the roles that are either taken or with too high a rank
          if(allRoles[i].getTaken() || (allRoles[i].getLevel() > rank)){
             System.out.println("\t" + allRoles[i].getName());
          }
@@ -215,7 +229,7 @@ public class Player implements Dice{
     return newrank;
   }
   
-   //Helper function!
+   //Helper function, get string from standard in
    private String getInput(){
       Scanner scanInput = new Scanner(System.in);
       String input = scanInput.nextLine();
