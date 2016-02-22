@@ -1,3 +1,5 @@
+package deadwood1;
+
 class Role{
   private String name;
   private int level;

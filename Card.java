@@ -1,3 +1,5 @@
+package deadwood1;
+
 class Card{
     private int budget;
     private String title;

@@ -1,3 +1,5 @@
+package deadwood1;
+
 public class SceneRoom extends Room {
 	
 	//Need "get roles" function, to get the roles in this room and the roles on the card as well hopefully, return as array or somesuch

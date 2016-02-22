@@ -1,98 +1,181 @@
+package deadwood1;
+
 import java.util.*;
 import java.lang.*;
 import java.io.*;
 class Deadwood{
     static int numDays = 4;
-    public static void main(String[] args) throws FileNotFoundException{      // from last Oliver edit: this begins to go through the days, does not yet increment scenesShot, 
-        Card[] cardArray = initializeCards();                                 // in Player we need to print out card and scene descriptions, titles, and levels when offering scenes to players
-        Room[] rooms = initializeRooms();                                     // other than that, seems not to far away from being done
-        SceneRoom mainStreet = (SceneRoom)rooms[0];
-        UtilityScene trailers = (UtilityScene )rooms[1];
-        SceneRoom saloon = (SceneRoom)rooms[2];
-        UtilityScene castingOffice = (UtilityScene )rooms[3];
-        SceneRoom secretHideout = (SceneRoom)rooms[4]; 
-        SceneRoom ranch = (SceneRoom)rooms[5];    
-        SceneRoom bank = (SceneRoom)rooms[6];
-        SceneRoom church = (SceneRoom)rooms[7];
-        SceneRoom hotel = (SceneRoom)rooms[8];
-        SceneRoom jail = (SceneRoom)rooms[9];
-        SceneRoom trainStation = (SceneRoom)rooms[10];
-        SceneRoom generalStore = (SceneRoom)rooms[11];
-        Scanner darkly = new Scanner(System.in);
-        int numPlayers = 0;
-        System.out.print("Enter the number of players between 2 and 8: ");
-        boolean okInput = false;
+    static Card[] cardArray; 
+	static Map<String, SceneRoom> sceneRooms;
+	static Map<String, UtilityRoom> utilityRooms; 
+	static int numPlayers;
+	public static void main(String[] args) throws FileNotFoundException{      
+    	initGame(); 
+    	System.out.println("Welcome to DeadWood");
+    	
+    	//prompts user for number of players 
+    	System.out.print("Please enter the number of player (2 - 8):");
+    	Scanner input = new Scanner(System.in);
+    	boolean okInput = false; 
         while (!okInput){
-           try{
-               numPlayers = darkly.nextInt();
-               if (numPlayers >= 2 && numPlayers <= 8){
-                  okInput = true;
-               }else{
-                  System.out.println();
-                  System.out.print("Please enter a value between 2 and 8: ");
-               }
-           }catch (InputMismatchException e){
-               System.out.println();
-               System.out.println("Incorrect Input");
-               System.exit(1);
-           }
-        }
-        Player[] players = initializePlayers(numPlayers, trailers);
-        while (numDays != 0){
-            int scenesShot = 0;
-            //Initialize cards for each day
-            int numRooms = rooms.length();
-            Random cardPicker = new Random();
-            for(int i = 0; i < numRooms; i++){
-               int cardChosen = cardPicker.nextInt(40);
-               while(cardArary[cardChosen].getUsed()){
-                  cardChosen = (cardChosen + 1) % 40;
-               }
-               rooms[i].setCard(cardArray[cardChosen]);
-               cardArray[cardChosen].setUsed();
+            try{
+                numPlayers = input.nextInt();
+                if (numPlayers >= 2 && numPlayers <= 8){
+                   okInput = true;
+                }else{
+                   System.out.print("Please enter a value between 2 and 8: ");
+                }
+            }catch (InputMismatchException e){
+                System.out.println();
+                System.out.println("Incorrect Input");
+                System.exit(1);
             }
-            while (scenesShot < 9){
-                  Scanner inRead = new Scanner(System.in);
-                  for (int i = 0; i < players.length; i++){
-                        System.out.println("Player " + i + " it is your turn.");
-                        if(players[i].getPosition().getName().equals("Casting Office")){
-                           System.out.println("You may upgrade your rank before you move.");
-                           int newRank = inRead.nextInt();                          
-                           players[i].upgrRank(newRank);
-                        }
-                        if (!players[i].isActing())
-                        {
-                            players[i].move();
-                        }else{
-                           System.out.println("You may act or rehearse your role.");
-                           boolean okInput = false;
-                           while(!okInput){
-                              String input = inRead.nextLine();
-                              if(input.equals("act")){
-                                 okInput = true;
-                                 players[i].act();
-                              }else if(input.equals("rehearse")){
-                                 okInput = true;
-                                 players[i].rehearse();
-                              }else if(input.equals("quit")){
-                                 okInput = true;                              
-                              }else{
-                                 System.out.println("That was incorrect input, type 'act' or 'rehearse' to continue, or 'quit' to stop.");
-                              }
-                           }
-                        }
-                  }
-            }
-            numDays--;
-        }
+         }
+    	
+    	
+    	
+//        Card[] cardArray = initializeCards();                                 
+//        Room[] rooms = initializeRooms();                                     
+//        SceneRoom mainStreet = (SceneRoom)rooms[0];
+//        UtilityScene trailers = (UtilityScene )rooms[1];
+//        SceneRoom saloon = (SceneRoom)rooms[2];
+//        UtilityScene castingOffice = (UtilityScene )rooms[3];
+//        SceneRoom secretHideout = (SceneRoom)rooms[4]; 
+//        SceneRoom ranch = (SceneRoom)rooms[5];    
+//        SceneRoom bank = (SceneRoom)rooms[6];
+//        SceneRoom church = (SceneRoom)rooms[7];
+//        SceneRoom hotel = (SceneRoom)rooms[8];
+//        SceneRoom jail = (SceneRoom)rooms[9];
+//        SceneRoom trainStation = (SceneRoom)rooms[10];
+//        SceneRoom generalStore = (SceneRoom)rooms[11];
+//        Scanner darkly = new Scanner(System.in);
+//        int numPlayers = 0;
+//        System.out.print("Enter the number of players between 2 and 8: ");
+//        boolean okInput = false;
+//        
+//        while (!okInput){
+//           try{
+//               numPlayers = darkly.nextInt();
+//               if (numPlayers >= 2 && numPlayers <= 8){
+//                  okInput = true;
+//               }else{
+//                  System.out.println();
+//                  System.out.print("Please enter a value between 2 and 8: ");
+//               }
+//           }catch (InputMismatchException e){
+//               System.out.println();
+//               System.out.println("Incorrect Input");
+//               System.exit(1);
+//           }
+//        }
+//        Player[] players = initializePlayers(numPlayers, trailers);
+//        while (numDays != 0){
+//            int scenesShot = 0;
+//            //Initialize cards for each day
+//            int numRooms = rooms.length;
+//            Random cardPicker = new Random();
+//            for(int i = 0; i < numRooms; i++){
+//               int cardChosen = cardPicker.nextInt(40);
+//               while(cardArray[cardChosen].getUsed()){
+//                  cardChosen = (cardChosen + 1) % 40;
+//               }
+//               
+//               rooms[i].setCard(cardArray[cardChosen]);
+//               cardArray[cardChosen].setUsed();
+//            }
+//            while (scenesShot < 9){
+//                  Scanner inRead = new Scanner(System.in);
+//                  for (int i = 0; i < players.length; i++){
+//                        System.out.println("Player " + i + " it is your turn.");
+//                        if(players[i].getPosition().getName().equals("Casting Office")){
+//                           System.out.println("You may upgrade your rank before you move.");
+//                           int newRank = inRead.nextInt();                          
+//                           players[i].upgrRank(newRank);
+//                        }
+//                        if (!players[i].isActing())
+//                        {
+//                            players[i].move();
+//                        }else{
+//                           System.out.println("You may act or rehearse your role.");
+//                           okInput = false;
+//                           while(!okInput){
+//                              String input = inRead.nextLine();
+//                              if(input.equals("act")){
+//                                 okInput = true;
+//                                 players[i].act();
+//                              }else if(input.equals("rehearse")){
+//                                 okInput = true;
+//                                 players[i].rehearse();
+//                              }else if(input.equals("quit")){
+//                                 okInput = true;                              
+//                              }else{
+//                                 System.out.println("That was incorrect input, type 'act' or 'rehearse' to continue, or 'quit' to stop.");
+//                              }
+//                           }
+//                        }
+//                  }
+//            }
+//            numDays--;
+//        }
     }
-    private static Card[] initializeCards () throws FileNotFoundException{
+    
+    
+    private static void initGame() throws FileNotFoundException {
+    	cardArray = initializeCards(); 
+    	sceneRooms = initScenes();    	
+    	utilityRooms = initUtilities(); 
+	}
+    
+    /*returns a map of scene objects */
+    private static Map<String, SceneRoom> initScenes() {
+    	Map<String, SceneRoom> sceneRooms = new HashMap<String, SceneRoom>(); 
+    	
+    	sceneRooms.put("main-street", new SceneRoom("Main Street", "Scene", 3, new Role("Railroad Worker", 1, "I'm a steel-drivin' man!"), new Role("Falls off Roof", 2, "Aaaaaaaaiiigggghh!"), new Role("Woman in Black Dress", 2, "Well, I'll be!"), new Role("Mayor McGinty", 4, "People of Deadwood!")));
+    	sceneRooms.put("saloon", new SceneRoom("Saloon", "Scene", 2, new Role("Woman in Red Dress", 2, "Come up and see me!"), new Role("Reluctant Farmer", 1, "I ain't so sure about that!"), new Role(null, 0, null), new Role(null, 0, null)));
+    	sceneRooms.put("ranch", new SceneRoom("Ranch", "Scene", 2, new Role("Shot in Leg", 1, "Ow! Me Leg!"), new Role("Man Under Horse", 3, "A little help here!"), new Role("Saucy Fred", 2, "That's what she said!"), new Role(null, 0, null)));
+    	sceneRooms.put("secret-hideout", new SceneRoom("Secret Hideout", "Scene", 3, new Role("Clumsy Pit Fighter", 1, "Hit me!"), new Role("Thug with Knife", 2, "Meet Suzy, my murderin' knife."), new Role("Dangerous Tom", 3, "There's two ways we can do this"), new Role("Penny, who is Lost", 4, "Oh, woe! For I am lost!")));
+    	sceneRooms.put("bank", new SceneRoom("Bank", "Scene", 1, new Role("Flustered Teller", 3, "Would you like a large bill, sir?"), new Role("Suspicious Gentleman", 2, "Can you be more specific?"), new Role(null, 0, null), new Role(null, 0, null))); 
+    	sceneRooms.put("hotel", new SceneRoom("Hotel", "Scene", 3, new Role("Faro Player", 1, "Hit me!"), new Role("Sleeping Drunkard", 1, "Zzzzz... Whiskey!"), new Role("Australian Bartender", 3, "What'll it be, mate?"), new Role("Falls from Balcony", 2, "Arrrgghh!!")));
+    	sceneRooms.put("church", new SceneRoom("Church", "Scene", 2, new Role("Dead Man", 1, "..."), new Role("Crying Woman", 2, "Oh, the humanity!"), new Role(null, 0, null), new Role(null, 0, null)));
+    	sceneRooms.put("train-station", new SceneRoom("Train Station", "Scene", 3, new Role("Dragged by Train", 1, "Omgeezers!"), new Role("Crusty Propector", 1, "Aww, peaches!"), new Role("Cyrus the Gunfighter", 4, "Git to fightin' or git away"), new Role("Preacher with Bag", 2, "The Lord will provide.")));
+    	sceneRooms.put("jail", new SceneRoom("Jail", "Scene", 1, new Role("Prisoner in Cell", 2, "Zzzzz... Whiskey!"), new Role("Feller in Irons", 3, "Ah kilt the wrong man!"), new Role(null, 0, null), new Role(null, 0, null)));
+    	sceneRooms.put("general-store", new SceneRoom("General Store", "Scene", 2, new Role("Man in Overalls", 1, "Looks like a storm's comin' in."), new Role("Mister Keach", 3, "Howdy, stranger."), new Role(null, 0, null), new Role(null, 0, null)));
+    	
+    	sceneRooms.get("main-street").setAdjacentRooms(new String[]{"trailers", "saloon", "jail"}); 
+    	sceneRooms.get("saloon").setAdjacentRooms(new String[]{"main-street", "trailers", "general-store", "bank"});
+    	sceneRooms.get("ranch").setAdjacentRooms(new String[]{"general-store", "jail", "saloon", "train-station"});
+    	sceneRooms.get("secret-hideout").setAdjacentRooms(new String[]{"casting-office", "ranch", "church"});
+    	sceneRooms.get("bank").setAdjacentRooms(new String[]{"hotel", "church", "saloon", "ranch"});
+    	sceneRooms.get("hotel").setAdjacentRooms(new String[]{"trailers", "bank", "church"});
+    	sceneRooms.get("church").setAdjacentRooms(new String[]{"hotel","bank", "secret-hideout"});
+    	sceneRooms.get("train-station").setAdjacentRooms(new String[]{"jail", "general-store", "casting-office"});
+    	sceneRooms.get("jail").setAdjacentRooms(new String[]{"main-street", "general-store", "train-station"});
+    	sceneRooms.get("general-store").setAdjacentRooms(new String[]{"jail", "saloon", "ranch", "train-station"});
+    	
+    	return sceneRooms; 
+    }
+    
+    /*returns a map of utilityRoom objects*/
+    private static Map<String, UtilityRoom> initUtilities(){
+    	Map<String, UtilityRoom> utilityRooms = new HashMap<String, UtilityRoom>(); 
+    	
+    	utilityRooms.put("trailers", new UtilityRoom("trailers"));
+    	utilityRooms.put("casting-office", new UtilityRoom("casting-office"));
+    	
+    	utilityRooms.get("trailers").setAdjacentRooms(new String[]{"main-street", "saloon", "hotel"});
+    	utilityRooms.get("casting-office").setAdjacentRooms(new String[]{"train-station", "ranch", "secret-hideout"});
+   
+    	return utilityRooms; 
+    }
+    
+    /*returns an array of cards*/
+	private static Card[] initializeCards () throws FileNotFoundException{
         File cardFile = new File("cards.txt");
-        Scanner darkly = new Scanner(cardFile);
+        Scanner input = new Scanner(cardFile);
         Card[] cardArray = new Card[40];
         int i = 0;
-        while (darkly.hasNext()){
-            String cardLine = darkly.nextLine();
+        while (input.hasNext()){
+            String cardLine = input.nextLine();
             Scanner cardReader = new Scanner(cardLine);
             cardReader.useDelimiter(", ");
             String title = cardReader.next();
@@ -115,109 +198,70 @@ class Deadwood{
         }
         return cardArray;
     }
-    private static Room[] initializeRooms (){
-        SceneRoom mainStreet = new SceneRoom("Main Street", "Scene", 3, new Role("Railroad Worker", 1, "I'm a steel-drivin' man!"), new Role("Falls off Roof", 2, "Aaaaaaaaiiigggghh!"), new Role("Woman in Black Dress", 2, "Well, I'll be!"), new Role("Mayor McGinty", 4, "People of Deadwood!"));
-        SceneRoom saloon = new SceneRoom("Saloon", "Scene", 2, new Role("Woman in Red Dress", 2, "Come up and see me!"), new Role("Reluctant Farmer", 1, "I ain't so sure about that!"), new Role(null, 0, null), new Role(null, 0, null));
-        SceneRoom ranch = new SceneRoom("Ranch", "Scene", 2, new Role("Shot in Leg", 1, "Ow! Me Leg!"), new Role("Man Under Horse", 3, "A little help here!"), new Role("Saucy Fred", 2, "That's what she said!"), new Role(null, 0, null));
-        SceneRoom secretHideout = new SceneRoom("Secret Hideout", "Scene", 3, new Role("Clumsy Pit Fighter", 1, "Hit me!"), new Role("Thug with Knife", 2, "Meet Suzy, my murderin' knife."), new Role("Dangerous Tom", 3, "There's two ways we can do this"), new Role("Penny, who is Lost", 4, "Oh, woe! For I am lost!"));
-        SceneRoom bank = new SceneRoom("Bank", "Scene", 1, new Role("Flustered Teller", 3, "Would you like a large bill, sir?"), new Role("Suspicious Gentleman", 2, "Can you be more specific?"), new Role(null, 0, null), new Role(null, 0, null));
-        SceneRoom hotel = new SceneRoom("Hotel", "Scene", 3, new Role("Faro Player", 1, "Hit me!"), new Role("Sleeping Drunkard", 1, "Zzzzz... Whiskey!"), new Role("Australian Bartender", 3, "What'll it be, mate?"), new Role("Falls from Balcony", 2, "Arrrgghh!!"));
-        SceneRoom church = new SceneRoom("Church", "Scene", 2, new Role("Dead Man", 1, "..."), new Role("Crying Woman", 2, "Oh, the humanity!"), new Role(null, 0, null), new Role(null, 0, null));
-        SceneRoom trainStation = new SceneRoom("Train Station", "Scene", 3, new Role("Dragged by Train", 1, "Omgeezers!"), new Role("Crusty Propector", 1, "Aww, peaches!"), new Role("Cyrus the Gunfighter", 4, "Git to fightin' or git away"), new Role("Preacher with Bag", 2, "The Lord will provide."));
-        SceneRoom jail = new SceneRoom("Jail", "Scene", 1, new Role("Prisoner in Cell", 2, "Zzzzz... Whiskey!"), new Role("Feller in Irons", 3, "Ah kilt the wrong man!"), new Role(null, 0, null), new Role(null, 0, null));
-        SceneRoom generalStore = new SceneRoom("General Store", "Scene", 2, new Role("Man in Overalls", 1, "Looks like a storm's comin' in."), new Role("Mister Keach", 3, "Howdy, stranger."), new Role(null, 0, null), new Role(null, 0, null));
-        UtilityScene trailers = new UtilityScene("Trailers");
-        UtilityScene castingOffice = new UtilityScene("Casting Office");
-        Room[] adjacent = {trailers, saloon, jail};
-        mainStreet.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {mainStreet, saloon, hotel};
-        trailers.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {mainStreet, trailers, bank, generalStore};
-        saloon.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {ranch, secretHideout, trainStation};
-        castingOffice.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {castingOffice, ranch, church};
-        secretHideout.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {castingOffice, secretHideout, bank, generalStore};
-        ranch.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {hotel, church, ranch, saloon};
-        bank.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {bank, hotel, secretHideout};
-        church.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {bank, church, trailers};
-        hotel.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {mainStreet, generalStore, trainStation};
-        jail.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {jail, generalStore, castingOffice};
-        trainStation.setAdjacentRooms(adjacent);
-        adjacent = new Room[] {jail, trainStation, ranch};
-        generalStore.setAdjacentRooms(adjacent);
-        
-        return new Room[] {mainStreet, trailers, saloon, castingOffice, secretHideout, ranch, bank, church, hotel, jail, trainStation, generalStore};
-    }
-    private static Player[] initializePlayers (int numPlayers, UtilityScene trailers){
-        Player p1;
-        Player p2;
-        Player p3;
-        Player p4;
-        Player p5;
-        Player p6;
-        Player p7;
-        Player p8;
-
-        switch (numPlayers){
-            case 2:
-            numDays = 3;
-            p1 = new Player(trailers);
-            p2 = new Player(trailers);
-            return new Player[] {p1, p2};
-            case 3:
-            numDays = 3;
-            p1 = new Player(trailers);
-            p2 = new Player(trailers);
-            p3 = new Player(trailers);
-            return new Player[] {p1, p2, p3};
-            case 4:
-            p1 = new Player(trailers);
-            p2 = new Player(trailers);
-            p3 = new Player(trailers);
-            p4 = new Player(trailers);
-            return new Player[] {p1, p2, p3, p4};
-            case 5:
-            p1 = new Player(2, 1, trailers);
-            p2 = new Player(2, 1, trailers);
-            p3 = new Player(2, 1, trailers);
-            p4 = new Player(2, 1, trailers);
-            p5 = new Player(2, 1, trailers);
-            return new Player[] {p1, p2, p3, p4, p5};
-            case 6:
-            p1 = new Player(4, 1, trailers);
-            p2 = new Player(4, 1, trailers);
-            p3 = new Player(4, 1, trailers);
-            p4 = new Player(4, 1, trailers);
-            p5 = new Player(4, 1, trailers);
-            p6 = new Player(4, 1, trailers);
-            return new Player[] {p1, p2, p3, p4, p5, p6};
-            case 7:
-            p1 = new Player(0, 2, trailers);
-            p2 = new Player(0, 2, trailers);
-            p3 = new Player(0, 2, trailers);
-            p4 = new Player(0, 2, trailers);
-            p5 = new Player(0, 2, trailers);
-            p6 = new Player(0, 2, trailers);
-            p7 = new Player(0, 2, trailers);
-            return new Player[] {p1, p2, p3, p4, p5, p6, p7};
-            case 8:
-            p1 = new Player(0, 2, trailers);
-            p2 = new Player(0, 2, trailers);
-            p3 = new Player(0, 2, trailers);
-            p4 = new Player(0, 2, trailers);
-            p5 = new Player(0, 2, trailers);
-            p6 = new Player(0, 2, trailers);
-            p7 = new Player(0, 2, trailers);
-            p8 = new Player(0, 2, trailers);
-            return new Player[] {p1, p2, p3, p4, p5, p6, p7, p8};
-       }
-       return null;
-    }
+   
+//    private static Player[] initializePlayers (int numPlayers, UtilityRoom trailers){
+//        Player p1;
+//        Player p2;
+//        Player p3;
+//        Player p4;
+//        Player p5;
+//        Player p6;
+//        Player p7;
+//        Player p8;
+//
+//        switch (numPlayers){
+//            case 2:
+//            numDays = 3;
+//            p1 = new Player(trailers);
+//            p2 = new Player(trailers);
+//            return new Player[] {p1, p2};
+//            case 3:
+//            numDays = 3;
+//            p1 = new Player(trailers);
+//            p2 = new Player(trailers);
+//            p3 = new Player(trailers);
+//            return new Player[] {p1, p2, p3};
+//            case 4:
+//            p1 = new Player(trailers);
+//            p2 = new Player(trailers);
+//            p3 = new Player(trailers);
+//            p4 = new Player(trailers);
+//            return new Player[] {p1, p2, p3, p4};
+//            case 5:
+//            p1 = new Player(2, 1, trailers);
+//            p2 = new Player(2, 1, trailers);
+//            p3 = new Player(2, 1, trailers);
+//            p4 = new Player(2, 1, trailers);
+//            p5 = new Player(2, 1, trailers);
+//            return new Player[] {p1, p2, p3, p4, p5};
+//            case 6:
+//            p1 = new Player(4, 1, trailers);
+//            p2 = new Player(4, 1, trailers);
+//            p3 = new Player(4, 1, trailers);
+//            p4 = new Player(4, 1, trailers);
+//            p5 = new Player(4, 1, trailers);
+//            p6 = new Player(4, 1, trailers);
+//            return new Player[] {p1, p2, p3, p4, p5, p6};
+//            case 7:
+//            p1 = new Player(0, 2, trailers);
+//            p2 = new Player(0, 2, trailers);
+//            p3 = new Player(0, 2, trailers);
+//            p4 = new Player(0, 2, trailers);
+//            p5 = new Player(0, 2, trailers);
+//            p6 = new Player(0, 2, trailers);
+//            p7 = new Player(0, 2, trailers);
+//            return new Player[] {p1, p2, p3, p4, p5, p6, p7};
+//            case 8:
+//            p1 = new Player(0, 2, trailers);
+//            p2 = new Player(0, 2, trailers);
+//            p3 = new Player(0, 2, trailers);
+//            p4 = new Player(0, 2, trailers);
+//            p5 = new Player(0, 2, trailers);
+//            p6 = new Player(0, 2, trailers);
+//            p7 = new Player(0, 2, trailers);
+//            p8 = new Player(0, 2, trailers);
+//            return new Player[] {p1, p2, p3, p4, p5, p6, p7, p8};
+//       }
+//       return null;
+//    }
 }

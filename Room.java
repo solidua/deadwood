@@ -1,7 +1,9 @@
+package deadwood1;
+
 public class Room {
 	private String roomName;  
 	private String roomType; 
-	private Room[] adjacentRooms; 
+	private String[] adjacentRooms; 
 
 	public Room() {
 		roomName = null; 
@@ -13,7 +15,7 @@ public class Room {
 		roomType = type; 
 	}
 	
-	public Room(String name, String type, Room[] adjacent) {
+	public Room(String name, String type, String[] adjacent) {
 		roomName = name; 
 		roomType = type;
 		adjacentRooms = adjacent; 
@@ -23,11 +25,11 @@ public class Room {
 		return roomName;
 	}
 	
-	public Room[] getAdjacentRooms() {
+	public String[] getAdjacentRooms() {
 		return adjacentRooms; 
 	}
   
-  public void setAdjacentRooms(Room[] adjacent) {
+  public void setAdjacentRooms(String[] adjacent) {
       adjacentRooms = adjacent;
   }
 	public String getRoomType() {
