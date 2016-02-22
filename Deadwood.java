@@ -41,95 +41,126 @@ class Deadwood{
     	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
     	
     	//game loop 
-    	while(daysLeft != 0) {
+    	while (daysLeft != 0) {
+    		System.out.println("There are " + daysLeft + " days left.");
     		
-    		//set cards for each room 
-    		Random cardPicker = new Random(); 
-    		for(Entry<String, SceneRoom> entry : sceneRooms.entrySet()) {
-    			SceneRoom scene = entry.getValue(); 
-    			int cardChosen = cardPicker.nextInt(40); 
-    			while(cardArray[cardChosen].getUsed()) {
-    				cardChosen = (cardChosen + 1) % 40; 
-    			}
-    			
-    			scene.setCard(cardArray[cardChosen]); 
-    			cardArray[cardChosen].setUsed(true);
+    		cardPicker(); 
+    		for(Player player : players) {
+    			player.setPosition(utilityRooms.get("trailers"));
     		}
     		
-    		
-    		while (daysLeft != 0) {
-    			int scenesShot = 0; 
-    			while (scenesShot < 9) {
-    				int playerNum = 0; 
-    				for(Player player : players) {
-    					playerNum++; 
-    					System.out.println("Player" + playerNum + " it is your turn");
-    					System.out.print("> ");
-    					
-    					
-    					String input = in.nextLine(); 
-    					boolean turnOver = false; 
-    					boolean moved = false; 
-    					while(!turnOver) {
-    						String[] inputArray = input.split("\\s+");
-    						switch(inputArray[0]) {
-    						case "who":
-    							player.who(); 
-    							break; 
-    						case "where":
-    							player.where(); 
-    							break; 
-    						case "move": 
-    							if (inputArray.length == 1) {
-    								player.move("none"); 
-    							} else if (!moved) {
-    								String roomName = mergeString(inputArray);
-    								moved = player.move(roomName);
-    							} else {
-    								System.out.println("You have already moved, you cannot move again.");
-    							}
-    							break; 
-    						case "work": 
-    							if (inputArray.length == 1) {
-    								player.work("none"); 
-    							} else {
-    								String roleName = mergeString(inputArray); 
-    								turnOver = player.work(roleName);
-    							}
-    							break; 
-    						case "upgrade": 
-    							break; 
-    						case "rehearse": 
-    							if(!moved) {
-    								turnOver = player.rehearse(); 
-    							} else {
-    								System.out.println("You may not rehearse because you just moved.");
-    							}
-    							break; 
-    						case "act": 
-    							if(!moved) {
-    								turnOver = player.act(); 
-    							} else {
-    								System.out.println("You may not act because you just moved.");
-    							}
-    							break; 
-    						case "end": 
-    							turnOver = true; 
-    							break; 
+    		int scenesShot = 0; 
+    		while (scenesShot < 9) {
+    			int playerNum = 0; 
+    			for(Player player : players) {
+    				playerNum++; 
+    				System.out.println("Player" + playerNum + " it is your turn");
+    				System.out.print("> ");
+
+    				String input = in.nextLine(); 
+    				boolean turnOver = false; 
+    				boolean moved = false; 
+    				while(!turnOver) {
+    					String[] inputArray = input.split("\\s+");
+    					switch(inputArray[0]) {
+    					case "who":
+    						player.who(); 
+    						break; 
+    					case "where":
+    						player.where(); 
+    						break; 
+    					case "move": 
+    						if (inputArray.length == 1) {
+    							player.move("none"); 
+    						} else if (!moved) {
+    							String roomName = mergeString(inputArray);
+    							moved = player.move(roomName);
+    						} else {
+    							System.out.println("You have already moved, you cannot move again.");
     						}
-    					
-    						if(!turnOver) {
-    							System.out.print("> ");
-        						input = in.nextLine(); 
+    						break; 
+    					case "work": 
+    						if (inputArray.length == 1) {
+    							player.work("none"); 
+    						} else {
+    							String roleName = mergeString(inputArray); 
+    							turnOver = player.work(roleName);
     						}
+    						break; 
+    					case "upgrade": 
+    						break; 
+    					case "rehearse": 
+    						if(!moved) {
+    							turnOver = player.rehearse(); 
+    						} else {
+    							System.out.println("You may not rehearse because you just moved.");
+    						}
+    						break; 
+    					case "act": 
+    						if(!moved) {
+    							int res = player.act();
+    							if(res == 0) {
+    								// no role yet, do nothing 
+    							} else if (res == 1) {
+    								turnOver = true; 
+    							} else if (res == 2) {
+    								scenesShot++; 
+    								turnOver = true; 
+    							}
+    						} else {
+    							System.out.println("You may not act because you just moved.");
+    						}
+    						break; 
+    					case "end": 
+    						turnOver = true; 
+    						break; 
+    					}
+
+    					if(!turnOver) {
+    						System.out.print("> ");
+    						input = in.nextLine(); 
     					}
     				}
     			}
-    			daysLeft--; 
     		}
+    		daysLeft--; 
     	}
-    	
+
+    	//game over
+    	System.out.println("The game has ended. The scores are");
+    	calculateScores(); 
     }
+	
+	private static void cardPicker() {
+		Random cardPicker = new Random(); 
+		for(Entry<String, SceneRoom> entry : sceneRooms.entrySet()) {
+			SceneRoom scene = entry.getValue(); 
+			int cardChosen = cardPicker.nextInt(40); 
+			while(cardArray[cardChosen].getUsed()) {
+				cardChosen = (cardChosen + 1) % 40; 
+			}
+			
+			scene.setCard(cardArray[cardChosen]); 
+			cardArray[cardChosen].setUsed(true);
+		}
+	}
+	
+	private static void calculateScores() {
+		int score = 0; 
+		int maxScore = 0;
+		String maxPlayer = "";
+		for(Player player : players) {
+			score = player.getMoney() + player.getCredits(); 
+			score = score + (5 * player.getRank()); 
+			System.out.println(player.getName() + " scored " + score + " points." );
+			if (score > maxScore) {
+				maxScore = score; 
+				maxPlayer = player.getName(); 
+			}
+		}
+		
+		System.out.println("The winner is " + maxPlayer);
+	}
 	
 	private static String mergeString(String[] strArray){
 		String str = "";
@@ -229,80 +260,33 @@ class Deadwood{
 	
 	private static Player[] initPlayers(int numPlayers, UtilityRoom trailer) {
 		Player[] players = new Player[numPlayers];
+		int bonusCredit = 0; 
+		int bonusRank = 0;
+		
+		switch(numPlayers) {
+		case 2:  
+		case 3: 
+			daysLeft = 3; 
+			break; 
+		case 5: 
+			bonusCredit = 2; 
+			break; 
+		case 6: 
+			bonusCredit = 4; 
+			break; 
+		case 7: 
+		case 8:
+			bonusRank = 2;
+			break; 
+		}
+		
 		
 		for (int i = 0; i < numPlayers; i++) {
 			players[i] = new Player(trailer, "Player-" + (i + 1)); 
+			players[i].addCredit(bonusCredit); 
+			players[i].setRank(bonusRank); 
 		}
 		
 		return players; 
-	}
-   
-//    private static Player[] initializePlayers (int numPlayers, UtilityRoom trailers){
-//        Player p1;
-//        Player p2;
-//        Player p3;
-//        Player p4;
-//        Player p5;
-//        Player p6;
-//        Player p7;
-//        Player p8;
-//
-	
-	
-	
-//        switch (numPlayers){
-//            case 2:
-//            numDays = 3;
-//            p1 = new Player(trailers);
-//            p2 = new Player(trailers);
-//            return new Player[] {p1, p2};
-//            case 3:
-//            numDays = 3;
-//            p1 = new Player(trailers);
-//            p2 = new Player(trailers);
-//            p3 = new Player(trailers);
-//            return new Player[] {p1, p2, p3};
-//            case 4:
-//            p1 = new Player(trailers);
-//            p2 = new Player(trailers);
-//            p3 = new Player(trailers);
-//            p4 = new Player(trailers);
-//            return new Player[] {p1, p2, p3, p4};
-//            case 5:
-//            p1 = new Player(2, 1, trailers);
-//            p2 = new Player(2, 1, trailers);
-//            p3 = new Player(2, 1, trailers);
-//            p4 = new Player(2, 1, trailers);
-//            p5 = new Player(2, 1, trailers);
-//            return new Player[] {p1, p2, p3, p4, p5};
-//            case 6:
-//            p1 = new Player(4, 1, trailers);
-//            p2 = new Player(4, 1, trailers);
-//            p3 = new Player(4, 1, trailers);
-//            p4 = new Player(4, 1, trailers);
-//            p5 = new Player(4, 1, trailers);
-//            p6 = new Player(4, 1, trailers);
-//            return new Player[] {p1, p2, p3, p4, p5, p6};
-//            case 7:
-//            p1 = new Player(0, 2, trailers);
-//            p2 = new Player(0, 2, trailers);
-//            p3 = new Player(0, 2, trailers);
-//            p4 = new Player(0, 2, trailers);
-//            p5 = new Player(0, 2, trailers);
-//            p6 = new Player(0, 2, trailers);
-//            p7 = new Player(0, 2, trailers);
-//            return new Player[] {p1, p2, p3, p4, p5, p6, p7};
-//            case 8:
-//            p1 = new Player(0, 2, trailers);
-//            p2 = new Player(0, 2, trailers);
-//            p3 = new Player(0, 2, trailers);
-//            p4 = new Player(0, 2, trailers);
-//            p5 = new Player(0, 2, trailers);
-//            p6 = new Player(0, 2, trailers);
-//            p7 = new Player(0, 2, trailers);
-//            p8 = new Player(0, 2, trailers);
-//            return new Player[] {p1, p2, p3, p4, p5, p6, p7, p8};
-//       }
-//       return null;
-//    }
+	}   
 }

@@ -1,19 +1,21 @@
 package deadwood1;
 
+import java.util.HashMap;
+
 public class UtilityRoom extends Room{
 
 	private String utilityType; 
+
 	
 	public UtilityRoom(String utilType, String name, String type) {
 		roomName = name;
 		roomType = type; 
-		utilityType = utilType; 
+		utilityType = utilType; 	
 	}
 	
 	public String getType() {
 		return utilityType; 
 	}
-	
 	
 	public int improveRank(int rankWanted, String payment) {
 		switch(rankWanted) {

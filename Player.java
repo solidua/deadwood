@@ -32,33 +32,60 @@ public class Player implements Dice{
 	}
 
 	//Getters and setters
+	public String getName() {
+		return name; 
+	}
+	
 	public int getRank(){
 		return rank;
 	}
-	private void setRank(int newrank){
+	
+	public void setRank(int newrank){
 		this.rank = newrank;
 	}
+	
+	public int getMoney() {
+		return money;
+	}
+	
 	public int addMoney(int pay){
 		return (this.money + pay);
 	}
+	
+	public int getCredits() {
+		return credits; 
+	}
+	
 	public int addCredit(int pay){
 		return (this.credits + pay);
 	}
+	
 	public boolean isActing(){
 		return acting;
 	}
+	
 	public void setActing(boolean input){
 		acting = input;
 	}
+	
+	public void setPosition(Room room) {
+		position = room; 
+	}
+	
 	public Room getPosition(){
 		return position;
 	}
 	
 	public void who(){
-		System.out.println(name + " " + "($" + money + "," + credits + "cr" + ")");
+		System.out.print(name + " " + "($" + money + "," + credits + "cr" + ")");
+		if(currentRole != null) {
+			System.out.println(" working " + currentRole.getName() + ", " + currentRole.getPhrase());
+		} else {
+			System.out.println(); 
+		}
 	}
 	
-	public void where(){
+	public void where() {
 		System.out.print("in ");
 		if(position.getRoomType().equals("Scene")) {
 			SceneRoom scene = (SceneRoom) position;
@@ -104,13 +131,19 @@ public class Player implements Dice{
 		if(!acting) {
 			if (position.getRoomType().equals("Scene")) {
 				SceneRoom currentScene = (SceneRoom)position;
-				if(roleWanted.equals("none")) {
-					currentScene.displayRoles(rank); 
+				if(currentScene.getShotCount() == 0) {
+					System.out.println("this scene is finished");
 					return false; 
 				} else {
-					acting = true; 
-					currentRole = currentScene.takeRole(roleWanted);
-					return true; 
+					if(roleWanted.equals("none")) {
+						currentScene.displayRoles(rank); 
+						return false; 
+					} else {
+						acting = true; 
+						rehearsalCount = 0; 
+						currentRole = currentScene.takeRole(roleWanted, this);
+						return true; 
+					}
 				}
 			} else {
 				UtilityRoom currentUtil = (UtilityRoom)position; 
@@ -134,7 +167,7 @@ public class Player implements Dice{
 		}     
 	}
 	
-	public boolean act() {
+	public int act() {
 		if (acting) {
 			SceneRoom scene = (SceneRoom) position; 
 			int[] dieOutcomes = rollDice(1); 
@@ -155,31 +188,42 @@ public class Player implements Dice{
 						credits++; 
 						money++; 
 					}
+					return 1; 
 				} else {
 					System.out.println("You have completed the scene!");
 					acting = false; 
-					distributeBonuses(scene); 
+					int[] diceOutcomes = rollDice(scene.getBudget()); 
+					scene.distributeBonuses(diceOutcomes); 
+					return 2; 
 				}
 			} else {
 				System.out.println("You have failed."); 
 				if(!currentRole.getOnCard()) {
 					money++; 
 				}
+				return 1; 
 			}
-			return true; 
 		} else {
 			System.out.println("You cannot act because you haven't taken up a role yet.");
-			return false; 
+			return 0; 
 		}
 	}
 	
-	private void distributeBonuses(SceneRoom scene)  {
-		if(scene.isCardRoleTaken()) {
-			System.out.println("Bonuses will be distributed");
-		} else {
-			System.out.println("Nobody held a starring role. Bonuses will not be distributed");
-		}
-	}
+//	public boolean upgrade(String type, int level) {
+//		if(position.getName().equals("Casting Office")) {
+//			UtilityRoom util = (UtilityRoom) position; 
+//			if(level > 1) {
+//				return util.tryUpgrade(level);
+//			} else {
+//				util.displayPossible(); 
+//				return false; 
+//			}
+//		} else {
+//			System.out.println("You need to be in the casting office to upgrade your level");
+//			return false; 
+//		}
+//	}
+	
 
 	//ask player if they want to pay with money or credit
 	//   public int upgrRank(int newrank){

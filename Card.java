@@ -56,8 +56,9 @@ class Card{
     public void setUsed(boolean newUsed){
         beenUsed = newUsed;
     }
-    public void roleTaken(Role takenRole){
-        takenRole.setTaken(true);
+    
+    public void roleTaken(Role takenRole, Player player){
+        takenRole.setTaken(true, player);
     }
     
     public boolean isARoleTaken() {
