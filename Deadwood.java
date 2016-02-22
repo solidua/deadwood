@@ -1,14 +1,18 @@
 package deadwood1;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.lang.*;
 import java.io.*;
 class Deadwood{
-    static int numDays = 4;
-    static Card[] cardArray; 
+	
 	static Map<String, SceneRoom> sceneRooms;
 	static Map<String, UtilityRoom> utilityRooms; 
+	static Card[] cardArray; 
+	static Player[] players; 
 	static int numPlayers;
+	static int daysLeft = 4; 
+	
 	public static void main(String[] args) throws FileNotFoundException{      
     	initGame(); 
     	System.out.println("Welcome to DeadWood");
@@ -17,7 +21,7 @@ class Deadwood{
     	System.out.print("Please enter the number of player (2 - 8):");
     	Scanner input = new Scanner(System.in);
     	boolean okInput = false; 
-        while (!okInput){
+    	while (!okInput){
             try{
                 numPlayers = input.nextInt();
                 if (numPlayers >= 2 && numPlayers <= 8){
@@ -32,43 +36,41 @@ class Deadwood{
             }
          }
     	
+    	//initialize
+    	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
     	
+    	//game loop 
+    	while(daysLeft != 0) {
+    		
+    		//set cards for each room 
+    		Random cardPicker = new Random(); 
+    		for(Entry<String, SceneRoom> entry : sceneRooms.entrySet()) {
+    			SceneRoom scene = entry.getValue(); 
+    			int cardChosen = cardPicker.nextInt(40); 
+    			while(cardArray[cardChosen].getUsed()) {
+    				cardChosen = (cardChosen + 1) % 40; 
+    			}
+    			
+    			scene.setCard(cardArray[cardChosen]); 
+    			cardArray[cardChosen].setUsed(true);
+    		}
+    		
+    		//
+    		while (daysLeft != 0) {
+    			int scenesShot = 0; 
+    			while (scenesShot < 9) {
+    				int playerNum = 0; 
+    				for(Player player : players) {
+    					playerNum++; 
+    					System.out.println("Player" + playerNum + " it is your turn");
+    					
+    				}
+    			}
+    		}
+    		
+    		
+    	}
     	
-//        Card[] cardArray = initializeCards();                                 
-//        Room[] rooms = initializeRooms();                                     
-//        SceneRoom mainStreet = (SceneRoom)rooms[0];
-//        UtilityScene trailers = (UtilityScene )rooms[1];
-//        SceneRoom saloon = (SceneRoom)rooms[2];
-//        UtilityScene castingOffice = (UtilityScene )rooms[3];
-//        SceneRoom secretHideout = (SceneRoom)rooms[4]; 
-//        SceneRoom ranch = (SceneRoom)rooms[5];    
-//        SceneRoom bank = (SceneRoom)rooms[6];
-//        SceneRoom church = (SceneRoom)rooms[7];
-//        SceneRoom hotel = (SceneRoom)rooms[8];
-//        SceneRoom jail = (SceneRoom)rooms[9];
-//        SceneRoom trainStation = (SceneRoom)rooms[10];
-//        SceneRoom generalStore = (SceneRoom)rooms[11];
-//        Scanner darkly = new Scanner(System.in);
-//        int numPlayers = 0;
-//        System.out.print("Enter the number of players between 2 and 8: ");
-//        boolean okInput = false;
-//        
-//        while (!okInput){
-//           try{
-//               numPlayers = darkly.nextInt();
-//               if (numPlayers >= 2 && numPlayers <= 8){
-//                  okInput = true;
-//               }else{
-//                  System.out.println();
-//                  System.out.print("Please enter a value between 2 and 8: ");
-//               }
-//           }catch (InputMismatchException e){
-//               System.out.println();
-//               System.out.println("Incorrect Input");
-//               System.exit(1);
-//           }
-//        }
-//        Player[] players = initializePlayers(numPlayers, trailers);
 //        while (numDays != 0){
 //            int scenesShot = 0;
 //            //Initialize cards for each day
@@ -121,7 +123,7 @@ class Deadwood{
     
     
     private static void initGame() throws FileNotFoundException {
-    	cardArray = initializeCards(); 
+    	cardArray = initCards(); 
     	sceneRooms = initScenes();    	
     	utilityRooms = initUtilities(); 
 	}
@@ -169,7 +171,7 @@ class Deadwood{
     }
     
     /*returns an array of cards*/
-	private static Card[] initializeCards () throws FileNotFoundException{
+	private static Card[] initCards () throws FileNotFoundException{
         File cardFile = new File("cards.txt");
         Scanner input = new Scanner(cardFile);
         Card[] cardArray = new Card[40];
@@ -198,6 +200,16 @@ class Deadwood{
         }
         return cardArray;
     }
+	
+	private static Player[] initPlayers(int numPlayers, UtilityRoom trailer) {
+		Player[] players = new Player[numPlayers];
+		
+		for (int i = 0; i < numPlayers; i++) {
+			players[i] = new Player(trailer); 
+		}
+		
+		return players; 
+	}
    
 //    private static Player[] initializePlayers (int numPlayers, UtilityRoom trailers){
 //        Player p1;
@@ -209,6 +221,9 @@ class Deadwood{
 //        Player p7;
 //        Player p8;
 //
+	
+	
+	
 //        switch (numPlayers){
 //            case 2:
 //            numDays = 3;
