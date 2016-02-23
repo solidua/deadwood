@@ -1,4 +1,4 @@
-package deadwood1;
+//package deadwood1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +71,14 @@ public class SceneRoom extends Room {
 		Role[] cardRoles = currentCard.getRoles();
 		System.out.println("These are the starring roles you can take:");
 		for(Role role : cardRoles) {         
-			if(!role.getTaken() && (role.getLevel() <= rank)) {
-				System.out.println("\t" + role.getName());
+			if(!role.getTaken() && (role.getLevel() <= rank) && !(role.getName().equals("0"))) {
+				System.out.println("\t" + role.getName() + ": " + role.getPhrase());
 			} 
 		}
 
 		System.out.println("These are the extra roles you can take:");
 		for(Role role: roomRoles) {
-			if(!role.getTaken() && (role.getLevel() <= rank)) {
+			if(!role.getTaken() && (role.getLevel() <= rank) && !(role.getName().equals("0"))) {
 				System.out.println("\t" + role.getName());
 			} 
 		}	
