@@ -69,6 +69,7 @@ public class SceneRoom extends Room {
 
 	public void displayRoles(int rank) {
 		Role[] cardRoles = currentCard.getRoles();
+      System.out.println("The scene's budget is: $" + currentCard.getBudget() + " million dollars, and has " + shotCount + " shots left.");
 		System.out.println("These are the starring roles you can take:");
       boolean roleAvailable = false;
 		for(Role role : cardRoles) {         
@@ -131,11 +132,15 @@ public class SceneRoom extends Room {
 			System.out.println("Bonuses will be distributed");
 			Role[] cardRoles = getCardRoles(); 
 			for (int i = 0; i < diceOutcomes.length; i++) {
-				cardRoles[i % cardRoles.length].giveBonus(diceOutcomes[i]);
+            if(cardRoles[i % cardRoles.length].getTaken()){
+   				cardRoles[i % cardRoles.length].giveBonus(diceOutcomes[i]);
+            }
 			}
 
 			for (Role role : roomRoles) {
-				role.giveBonus(0);
+            if(role.getTaken()){
+				   role.giveBonus(0);
+            }
 			}
 
 		} else {
@@ -148,11 +153,15 @@ public class SceneRoom extends Room {
 		Role[] cardRoles = getCardRoles(); 
 
 		for(Role role : cardRoles) {
-			role.removePlayer(); 
+         if(role.getTaken()){
+   			role.removePlayer(); 
+         }
 		}
 
 		for(Role role : roomRoles) {
-			role.removePlayer(); 
+         if(role.getTaken()){
+   			role.removePlayer(); 
+         }      
 		}
 	}
 }

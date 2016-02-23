@@ -35,6 +35,10 @@ public class Player implements Dice{
 	public String getName() {
 		return name; 
 	}
+   
+   public void clearRole(){
+      currentRole = null;
+   }
 	
 	public int getRank(){
 		return rank;
@@ -142,7 +146,7 @@ public class Player implements Dice{
 						acting = true; 
 						rehearsalCount = 0; 
 						currentRole = currentScene.takeRole(roleWanted, this);
-						return true; 
+						return true;
 					}
 				}
 			} else {
@@ -158,9 +162,15 @@ public class Player implements Dice{
 	
 	public boolean rehearse(){
 		if(acting){
-			rehearsalCount++; 
-			System.out.println("You have rehearsed for your role. Your rehearsal count is now " + rehearsalCount + ".");
-			return true; 
+         SceneRoom scene = (SceneRoom)position;
+         if(scene.getBudget() > rehearsalCount){                     
+			   rehearsalCount++; 
+			   System.out.println("You have rehearsed for your role. Your rehearsal count is now " + rehearsalCount + ".");
+			   return true;
+         }else{
+            System.out.println("You have rehearsed as much as you can, go ahead and act.");
+            return false;
+         }
 		}else{
 			System.out.println("You cannot rehearse because you haven't taken up a role yet.");
 			return false; 
@@ -168,18 +178,19 @@ public class Player implements Dice{
 	}
 	
 	public int act() {
+      int retvalue = -1;
 		if (acting) {
 			SceneRoom scene = (SceneRoom) position; 
 			int[] dieOutcomes = rollDice(1); 
 			int budget = scene.getBudget(); 
 			System.out.println("The budget for this scene is " + budget);
 			System.out.println("You rolled a " + dieOutcomes[0]);
-			System.out.println("You rehearsal count is " + rehearsalCount);
-			if (dieOutcomes[0] + rehearsalCount >= budget) {
-				System.out.println("You have succeded!"); 
-				int shotsLeft = scene.decrementShotCount(); 
-				if (shotsLeft > 0) {
-					System.out.println("There are " + shotsLeft + " shots left.");
+			System.out.println("You rehearsal count is " + rehearsalCount);         
+			if (dieOutcomes[0] + rehearsalCount >= budget) {            
+				System.out.println("You have succeeded!");
+            int shots = scene.getShotCount();
+				if (shots > 0) {
+					System.out.println("There are " + (shots-1) + " shots left.");
 					if(currentRole.getOnCard()) {
 						System.out.println("You recieved 2 credits");
 						credits = credits + 2; 
@@ -188,41 +199,43 @@ public class Player implements Dice{
 						credits++; 
 						money++; 
 					}
-					return 1; 
-				} else {
+               shots = scene.decrementShotCount();
+					retvalue = 1; 
+				}if(shots == 0) {
 					System.out.println("You have completed the scene!");
 					acting = false; 
 					int[] diceOutcomes = rollDice(scene.getBudget()); 
 					scene.distributeBonuses(diceOutcomes); 
-					return 2; 
+					retvalue = 2; 
 				}
 			} else {
 				System.out.println("You have failed."); 
 				if(!currentRole.getOnCard()) {
 					money++; 
 				}
-				return 1; 
+				retvalue = 1; 
 			}
 		} else {
 			System.out.println("You cannot act because you haven't taken up a role yet.");
-			return 0; 
+			retvalue = 0; 
 		}
+      return retvalue;
 	}
 	
-//	public boolean upgrade(String type, int level) {
-//		if(position.getName().equals("Casting Office")) {
-//			UtilityRoom util = (UtilityRoom) position; 
-//			if(level > 1) {
-//				return util.tryUpgrade(level);
-//			} else {
-//				util.displayPossible(); 
-//				return false; 
-//			}
-//		} else {
-//			System.out.println("You need to be in the casting office to upgrade your level");
-//			return false; 
-//		}
-//	}
+	public boolean upgrade(String type, int level) {
+		if(position.getName().equals("Casting Office")) {
+			UtilityRoom util = (UtilityRoom) position;
+			if(level > 1) {            				
+            return util.upgradeRank(type, this, level);
+			} else {        
+				util.displayAvailableRanks(rank, credits, money); 
+				return false; 
+			}
+		} else {
+			System.out.println("You need to be in the casting office to upgrade your level");
+			return false; 
+		}
+	}
 	
 
 	//ask player if they want to pay with money or credit

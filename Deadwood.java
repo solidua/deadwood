@@ -50,7 +50,7 @@ class Deadwood{
     		}
     		
     		int scenesShot = 0; 
-    		while (scenesShot < 9) {
+    		while (scenesShot < 2) {//Change this back to 9
     			int playerNum = 0; 
     			for(Player player : players) {
     				playerNum++; 
@@ -88,7 +88,19 @@ class Deadwood{
     						}
     						break; 
     					case "upgrade":
-                     //turnOver = player.upgrade();
+                     if(inputArray.length == 1){
+                        turnOver = player.upgrade("none", 0);
+                     }else if(inputArray.length == 3){
+                        if(inputArray[1].equals("$")){
+                           turnOver = player.upgrade("money", Integer.parseInt(inputArray[2]));
+                        }else if(inputArray[1].toLowerCase().equals("cr")){
+                           turnOver = player.upgrade("credits", Integer.parseInt(inputArray[2]));                        
+                        }else{
+                           System.out.println("That is an invalid  type to upgrade, type '$' to pay with cash, and 'cr' to pay with credits.");
+                        }
+                     }else{
+                        System.out.println("We need three inputs: 'upgrade,' '$/cr,' 'desired rank.'");
+                     }
     						break; 
     					case "rehearse": 
     						if(!moved) {
@@ -96,7 +108,7 @@ class Deadwood{
     						} else {
     							System.out.println("You may not rehearse because you just moved.");
     						}
-    						break; 
+    						break;
     					case "act": 
     						if(!moved) {
     							int res = player.act();
@@ -114,7 +126,7 @@ class Deadwood{
     						break; 
     					case "end": 
     						turnOver = true; 
-    						break; 
+    						break;
     					}
 
     					if(!turnOver) {
@@ -189,7 +201,7 @@ class Deadwood{
     	SceneRoom secretHideout = new SceneRoom("Secret Hideout", "Scene", 3, new Role("Clumsy Pit Fighter", 1, "Hit me!", false), new Role("Thug with Knife", 2, "Meet Suzy, my murderin' knife.", false), new Role("Dangerous Tom", 3, "There's two ways we can do this", false), new Role("Penny, who is Lost", 4, "Oh, woe! For I am lost!", false));
     	SceneRoom bank = new SceneRoom("Bank", "Scene", 1, new Role("Flustered Teller", 3, "Would you like a large bill, sir?", false), new Role("Suspicious Gentleman", 2, "Can you be more specific?", false)); 
     	SceneRoom hotel = new SceneRoom("Hotel", "Scene", 3, new Role("Faro Player", 1, "Hit me!", false), new Role("Sleeping Drunkard", 1, "Zzzzz... Whiskey!", false), new Role("Australian Bartender", 3, "What'll it be, mate?", false), new Role("Falls from Balcony", 2, "Arrrgghh!!", false));
-    	SceneRoom church = new SceneRoom("Church", "Scene", 2, new Role("Dead Man", 1, "...", false), new Role("Crying Woman", 2, "Oh, the humanity!", false));
+      SceneRoom church = new SceneRoom("Church", "Scene", 2, new Role("Dead Man", 1, "...", false), new Role("Crying Woman", 2, "Oh, the humanity!", false));
     	SceneRoom trainStation = new SceneRoom("Train Station", "Scene", 3, new Role("Dragged by Train", 1, "Omgeezers!", false), new Role("Crusty Propector", 1, "Aww, peaches!", false), new Role("Cyrus the Gunfighter", 4, "Git to fightin' or git away", false), new Role("Preacher with Bag", 2, "The Lord will provide.", false));
     	SceneRoom jail = new SceneRoom("Jail", "Scene", 1, new Role("Prisoner in Cell", 2, "Zzzzz... Whiskey!", false), new Role("Feller in Irons", 3, "Ah kilt the wrong man!", false));
     	SceneRoom generalStore = new SceneRoom("General Store", "Scene", 2, new Role("Man in Overalls", 1, "Looks like a storm's comin' in.", false), new Role("Mister Keach", 3, "Howdy, stranger.", false)); 
@@ -215,7 +227,7 @@ class Deadwood{
     	//set adjacent rooms for each room
     	sceneRooms.get("main-street").setAdjacentRooms(new Room[]{trailers, saloon, jail}); 
     	sceneRooms.get("saloon").setAdjacentRooms(new Room[]{mainStreet, trailers, generalStore, bank});
-    	sceneRooms.get("ranch").setAdjacentRooms(new Room[]{generalStore, jail, saloon, trainStation});
+    	sceneRooms.get("ranch").setAdjacentRooms(new Room[]{generalStore, castingOffice, secretHideout, bank});
     	sceneRooms.get("secret-hideout").setAdjacentRooms(new Room[]{castingOffice, ranch, church});
     	sceneRooms.get("bank").setAdjacentRooms(new Room[]{hotel, church, saloon, ranch});
     	sceneRooms.get("hotel").setAdjacentRooms(new Room[]{trailers, bank, church});

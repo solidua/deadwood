@@ -48,7 +48,7 @@ class Role{
   }
   
   public void setTaken(boolean newTaken, Player player){
-	  takenBy = player; 
+	   takenBy = player; 
       taken = newTaken;
   }
   
@@ -61,6 +61,7 @@ class Role{
   }
   
   public void removePlayer() {
+     takenBy.clearRole();
 	  takenBy.setActing(false);
   }
   
