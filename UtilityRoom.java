@@ -1,5 +1,8 @@
-//package deadwood1;
-
+/* A2 CS345
+*  UtilityRoom.java
+*  A trailer or casting office that only does special things if casting office
+*  Inherits from Room Class. 
+*/
 import java.util.HashMap;
 
 public class UtilityRoom extends Room{
@@ -19,7 +22,9 @@ public class UtilityRoom extends Room{
 		return utilityType; 
 	}
 	
-   //
+   /* Pre: Accepts the rank of the player and the amount of credits and money they have
+   *  Post: Displays possible rank upgrades. 
+   */
    public void displayAvailableRanks(int currentRank, int credits, int money){
       boolean upgradeable = true;
       int i = 0;
@@ -39,6 +44,10 @@ public class UtilityRoom extends Room{
       }
    }
    
+   /* Pre: Accepts the type of payment to upgrade rank, the player to be upgraded and number between 
+   *       player's rank and 6
+   *  Post: Returns false if upgrade failed and true otherwise. 
+   */
    public boolean upgradeRank(String payType, Player player, int wantedRank){
       if(wantedRank < player.getRank() || wantedRank > 6){
          System.out.println("That is an invalid rank to take.");
@@ -68,42 +77,5 @@ public class UtilityRoom extends Room{
          }
       }
       return false;
-   }
-   
-	public int improveRank(int rankWanted, String payment) {
-		switch(rankWanted) {
-			case 2:
-            if (payment.equals("money")){
-               return 4;
-            }else{
-               return 5;
-            }
-			case 3:
-				if (payment.equals("money")){
-               return 10;
-            }else{
-               return 10;
-            } 
-			case 4: 
-				if (payment.equals("money")){
-               return 18;
-            }else{
-               return 15;
-            } 
-			case 5: 
-				if (payment.equals("money")){
-               return 28;
-            }else{
-               return 20;
-            } 
-			case 6:
-				if (payment.equals("money")){
-               return 40;
-            }else{
-               return 25;
-            } 
-		}
-    return 0;
-	}
-	
+   }	
 }

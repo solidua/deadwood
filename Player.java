@@ -1,5 +1,8 @@
-//package deadwood1;
-
+/* A2 CS345
+*  Player.java
+*  Stores player related data, rolls dice, and can perform the following player actions: 
+*     act, rehearse, move, upgrade rank, and roll dice.
+*/
 import java.util.*;
 import java.lang.*;
 
@@ -14,7 +17,7 @@ public class Player implements Dice{
 	private boolean turnOver = false;
 	private Role currentRole = null; 
 	
-	//Constructors
+	//constructors
 	public Player(int startCredits, int startRank, Room trailers, String name){
 		this.name = name; 
 		rank = startRank;
@@ -31,7 +34,7 @@ public class Player implements Dice{
 		position = trailers;
 	}
 
-	//Getters and setters
+	//getters and setters
 	public String getName() {
 		return name; 
 	}
@@ -80,6 +83,9 @@ public class Player implements Dice{
 		return position;
 	}
 	
+   /* Pre: Called when Player wants to know who they are or their status.
+   *  Post: Prints the current Player's name, current currencies, and current rank, and what Role they are in, if they have a Role.
+   */
 	public void who(){
 		System.out.print(name + " " + "($" + money + "," + credits + "cr" + ")" + " Rank: " + rank);
 		if(currentRole != null) {
@@ -89,6 +95,9 @@ public class Player implements Dice{
 		}
 	}
 	
+   /* Pre: Called when Player wants to know where they are.
+   *  Post: Prints what room the player is in.
+   */
 	public void where() {
 		System.out.print("in ");
 		if(position.getRoomType().equals("Scene")) {
@@ -101,6 +110,10 @@ public class Player implements Dice{
 		}
 	}
 
+   /* Pre: Accepts none or the name of one of the adjacent Rooms.
+   *  Post: Prints the adjacent rooms when the input is none, and changes the Player's position to the room they moved to if successful.
+   *        Returns false when it did not succeed, and true if it was successful.
+   */
 	public boolean move(String dest){
 		turnOver = true;
 		if(!acting) {
@@ -131,6 +144,9 @@ public class Player implements Dice{
 
 	}
 	
+   /* Pre: Accepts the name of one of the roles in the current Room. Must be in a SceneRoom and not acting.
+   *  Post: Returns true if it was successful, and false if it was not.
+   */
 	public boolean work(String roleWanted) {
 		if(!acting) {
 			if (position.getRoomType().equals("Scene")) {
@@ -160,6 +176,10 @@ public class Player implements Dice{
 		}
 	}
 	
+   /* Pre: Accepts no arguments. Must be acting to complete successfully.
+   *  Post: If acting, returns true and increments rehearsalCount by one. Returns false if rehearsalCount is equal to 
+   *        the scene's budget. Returns false if not acting.
+   */
 	public boolean rehearse(){
 		if(acting){
          SceneRoom scene = (SceneRoom)position;
@@ -177,6 +197,9 @@ public class Player implements Dice{
 		}     
 	}
 	
+   /* Pre: Accepts no arguments. Must be acting.
+   *  Post: Returns a number based on what it did, 1 if the scene did not finish, and 2 if the scene did. Should not return -1.
+   */
 	public int act() {
       int retvalue = -1;
 		if (acting) {
@@ -222,6 +245,9 @@ public class Player implements Dice{
       return retvalue;
 	}
 	
+   /* Pre: Accepts either 'money' or 'credits,' and the rank the player wants to upgrade to.
+   *  Post: Returns the value of upgradeRank (from UtilityRoom), or false if it did not enter there.
+   */
 	public boolean upgrade(String type, int level) {
 		if(position.getName().equals("Casting Office")) {
 			UtilityRoom util = (UtilityRoom) position;
@@ -236,39 +262,10 @@ public class Player implements Dice{
 			return false; 
 		}
 	}
-	
 
-	//ask player if they want to pay with money or credit
-	//   public int upgrRank(int newrank){
-	//      boolean inputGood = false;
-	//      Scanner scanInput = new Scanner(System.in);      
-	//      if(this.position.getRoomType().equals("Casting Office")){
-	//        System.out.println("Do you want to pay for your new rank with money or credit?");
-	//        System.out.print("2 is $4 or 5 credits, 3 is $10 or 10 credits, 4 is $18 or 15 credits, 5 is $28 dollars or 20 credits, 6 is $40 or 25 credits");
-	//        while(!inputGood){
-	//          System.out.println("You currently have " + credits + " credits and " + money + " dollars.");
-	//          String input = getInput();
-	//          UtilityScene castingOffice = (UtilityScene)position;
-	//          if(input.equals("money") && (this.money > castingOffice.improveRank(newrank, "money"))){
-	//            setRank(newrank);
-	//            inputGood = true;
-	//          }else if(input.equals("credit") && (this.credits > castingOffice.improveRank(newrank, "credit"))){
-	//            setRank(newrank);
-	//            inputGood = true;
-	//          }else if(input.equals("quit")){
-	//            setRank(-1);
-	//            inputGood = true;
-	//          }else if(!input.equals("credit") && !input.equals("money")){
-	//            System.out.println("Wrong input! Please input either money or credit for your preferred method of payment!");
-	//          }else{
-	//            System.out.println("You don't have sufficient money/credit for that! Please choose a different payment method or type 'quit' to stop");
-	//          }
-	//        }
-	//    }
-	//    return newrank;
-	//  }
-
-	//Helper function, get string from standard in
+   /* Pre: Accepts a string from System.in
+   *  Post: Returns that string sent to all lower case.
+   */
 	private String getInput(){
 		Scanner scanInput = new Scanner(System.in);
 		String input = scanInput.nextLine();
@@ -276,6 +273,9 @@ public class Player implements Dice{
 		return input.toLowerCase();
 	}  
 
+   /* Pre: A number of dice to roll.
+   *  Post: Returns an array of the different values rolled by each die.
+   */
 	public int[] rollDice(int numDice){
 		Random d6 = new Random();
 		int[] values = new int[numDice];
@@ -284,5 +284,4 @@ public class Player implements Dice{
 		}
 		return values;
 	}
-
 }

@@ -1,4 +1,8 @@
-//package deadwood1;
+/* A2 CS345
+*  SceneRoom.java
+*  Inherits from Room Class.
+*  Holds scene information, a Card, and extra Roles.
+*/
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +13,7 @@ public class SceneRoom extends Room {
 	private Card currentCard;
 	private Role[] roomRoles;
 
+   //constructors
 	public SceneRoom(String name, String type) {
 		super(name, type); 
 	}
@@ -33,7 +38,8 @@ public class SceneRoom extends Room {
 		shotCount = shots;
 		roomRoles = new Role[]{firstRole, secondRole, thirdRole, fourthRole}; 
 	}
-
+   
+   //getters and setters
 	public Role[] getRoomRoles() {
 		return roomRoles; 
 	}
@@ -41,10 +47,6 @@ public class SceneRoom extends Room {
 	public Role[] getCardRoles() {
 		return currentCard.getRoles(); 
 	}	
-
-	public void displayInfo() {
-		System.out.println(roomName + " shooting " + currentCard.getTitle());
-	}
 	
 	public Card setCard(Card newCard){
 		return currentCard = newCard;
@@ -67,6 +69,13 @@ public class SceneRoom extends Room {
 		return currentCard.isARoleTaken(); 
 	}
 
+   public void displayInfo() {
+		System.out.println(roomName + " shooting " + currentCard.getTitle());
+	}
+   
+   /* Pre: Accepts the rank of the Player who is requesting what Roles are available.
+   *  Post: Prints out the available Roles to the requesting Player, printing to System.out
+   */
 	public void displayRoles(int rank) {
 		Role[] cardRoles = currentCard.getRoles();
       System.out.println("The scene's budget is: $" + currentCard.getBudget() + " million dollars, and has " + shotCount + " shots left.");
@@ -95,6 +104,9 @@ public class SceneRoom extends Room {
       }	
 	}
 
+   /* Pre:  Accepts a Role the Player can take, and wants to take, and the Player
+   *  Post: Returns the Role if successful, null otherwise.
+   */
 	public Role takeRole(String roleWanted, Player player) {
 		Role[] cardRoles = currentCard.getRoles();
 		for(Role role : cardRoles) {
@@ -126,7 +138,10 @@ public class SceneRoom extends Room {
 		System.out.println("You did not enter a valid role name. Type 'work' to list the available roles");
 		return null; 
 	}
-
+   
+   /* Pre:  A integer array of the different dice rolls after a scene is completed.
+   *  Post: Adds values to the players playing based on the different rolls.
+   */
 	public void distributeBonuses(int[] diceOutcomes) {
 		if(currentCard.isARoleTaken()) {
 			System.out.println("Bonuses will be distributed");
@@ -149,6 +164,9 @@ public class SceneRoom extends Room {
 		clearRoles(); 
 	}
 
+   /* Pre: Is called when the scene is completed
+   *  Post: Removes Players from all the Roles.
+   */
 	private void clearRoles() {
 		Role[] cardRoles = getCardRoles(); 
 

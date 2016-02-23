@@ -1,10 +1,16 @@
-//package deadwood1;
+/* A2 CS345
+*  Room.java
+*  Has two children: SceneRoom and UtilityRoom
+*  Holds adjacent rooms, and the name of the room.
+*/
+
 
 public class Room {
 	protected String roomName;  
 	protected String roomType; 
 	private Room[] adjacentRooms; 
-
+   
+   //constructors
 	public Room() {
 		roomName = null; 
 		roomType = null; 
@@ -21,6 +27,7 @@ public class Room {
 		adjacentRooms = adjacent; 
 	}
 
+   //getters and setters
 	public String getName() {
 		return roomName;
 	}

@@ -1,4 +1,7 @@
-//package deadwood1;
+/* A2 CS345
+*  Role.java
+*  Role is associated with SceneRooms and Players. It holds information about starring roles and extra roles.  
+*/
 
 class Role{
   private String name;
@@ -8,6 +11,7 @@ class Role{
   private Player takenBy = null; 
   private boolean onCard; 
   
+  //constructors
   public Role (){
       name = null;
       level = 0;
@@ -21,6 +25,8 @@ class Role{
       taken = false;
       this.onCard = onCard; 
   }
+  
+  //getters and setters
   public String getName(){
       return name;
   }
@@ -52,14 +58,6 @@ class Role{
       taken = newTaken;
   }
   
-  public void giveBonus(int money) {
-	  if(onCard) {
-		  takenBy.addMoney(money); 
-	  } else {
-		  takenBy.addMoney(level); 
-	  }
-  }
-  
   public void removePlayer() {
      takenBy.clearRole();
 	  takenBy.setActing(false);
@@ -67,5 +65,16 @@ class Role{
   
   public boolean getOnCard() {
 	  return onCard; 
+  }
+  
+  /* Pre: Accepts the bonus money from a completed scene. 
+  *  Post: Gives the bonus money to the player working this role
+  */
+  public void giveBonus(int money) {
+	  if(onCard) {
+		  takenBy.addMoney(money); 
+	  } else {
+		  takenBy.addMoney(level); 
+	  }
   }
 }
