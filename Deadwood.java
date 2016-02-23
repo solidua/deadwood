@@ -1,4 +1,4 @@
-package deadwood1;
+//package deadwood1;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -74,7 +74,7 @@ class Deadwood{
     							player.move("none"); 
     						} else if (!moved) {
     							String roomName = mergeString(inputArray);
-    							moved = player.move(roomName);
+    							moved = player.move(roomName.toLowerCase());
     						} else {
     							System.out.println("You have already moved, you cannot move again.");
     						}
@@ -84,10 +84,11 @@ class Deadwood{
     							player.work("none"); 
     						} else {
     							String roleName = mergeString(inputArray); 
-    							turnOver = player.work(roleName);
+    							turnOver = player.work(roleName.toLowerCase());
     						}
     						break; 
-    					case "upgrade": 
+    					case "upgrade":
+                     //turnOver = player.upgrade();
     						break; 
     					case "rehearse": 
     						if(!moved) {
@@ -172,8 +173,8 @@ class Deadwood{
     
 	/*sets up the board*/
     private static void initGame() throws FileNotFoundException {
-    	cardArray = initCards(); 
-    	initScenes(); 
+    	cardArray = initCards();
+    	initScenes();
 	}
     
     /*returns a map of scene objects */
@@ -261,7 +262,7 @@ class Deadwood{
 	private static Player[] initPlayers(int numPlayers, UtilityRoom trailer) {
 		Player[] players = new Player[numPlayers];
 		int bonusCredit = 0; 
-		int bonusRank = 0;
+		int bonusRank = 1;
 		
 		switch(numPlayers) {
 		case 2:  
