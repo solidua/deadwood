@@ -1,4 +1,7 @@
-//package deadwood1;
+/* A2 CS345 
+*  Card.java
+*  Associated with SceneRoom Class. Hold information about starring roles of scene. 
+*/
 
 class Card{
     private int budget;
@@ -7,6 +10,7 @@ class Card{
     private Role[] cardRoles; 
     private boolean beenUsed;
 
+   //constructors
     public Card (){
         budget = 0;
         title = null;
@@ -38,6 +42,7 @@ class Card{
         cardRoles = new Role[]{firstRole, secondRole, thirdRole}; 
     }
     
+    //getters and setters
     public int getBudget(){
         return budget;
     }
