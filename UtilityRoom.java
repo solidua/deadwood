@@ -3,7 +3,6 @@
 *  A trailer or casting office that only does special things if casting office
 *  Inherits from Room Class. 
 */
-import java.util.HashMap;
 
 public class UtilityRoom extends Room{
    private int[][] upgradeTable;

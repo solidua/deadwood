@@ -1,3 +1,5 @@
+
+
 /* A2 CS345
 *  Deadwood.java
 *  Has main, where the game is run from.
@@ -5,7 +7,6 @@
 */
 import java.util.*;
 import java.util.Map.Entry;
-import java.lang.*;
 import java.io.*;
 class Deadwood{
 	
@@ -20,6 +21,7 @@ class Deadwood{
       //initializes rooms and cards
     	initGame(); 
     	System.out.println("Welcome to DeadWood");
+    	System.out.println();
     	
     	//prompts user for number of players 
     	System.out.print("Please enter the number of player (2 - 8):");
@@ -32,10 +34,11 @@ class Deadwood{
                    okInput = true;
                 }else{
                    System.out.print("Please enter a value between 2 and 8: ");
+                   System.out.println();
                 }
             }catch (InputMismatchException e){
                 System.out.println();
-                System.out.println("Incorrect Input");
+                System.out.println("Invalid input... Exiting deadwood.");
                 System.exit(1);
             }
          }
@@ -47,6 +50,7 @@ class Deadwood{
     	//game loop 
     	while (daysLeft != 0) {
     		System.out.println("There are " + daysLeft + " days left.");
+    		System.out.println();
     		//gives each SceneRoom a card
     		cardPicker();
          //each player is moved to the trailers at the start of each day
@@ -61,6 +65,7 @@ class Deadwood{
     			for(Player player : players) {
     				playerNum++; 
     				System.out.println("Player" + playerNum + " it is your turn");
+    				System.out.println("Type 'help' to view actions");
     				System.out.print("> ");
 
     				String input = in.nextLine(); 
@@ -135,6 +140,9 @@ class Deadwood{
     					case "end": 
     						turnOver = true; 
     						break;
+    					case "help":
+    						printHelp(); 
+    						break;
     					}
 
     					if(!turnOver) {
@@ -150,7 +158,29 @@ class Deadwood{
     	//game over
     	System.out.println("The game has ended. The scores are");
     	calculateScores(); 
+    	in.close(); 
     }
+	
+	private static void printHelp() {
+		System.out.println("Here is a list of your possible actions:");
+		System.out.println("who");
+		System.out.println("   Shows your status");
+		System.out.println("where");
+		System.out.println("   Shows your position on the board");
+		System.out.println("move [ROOM]");
+		System.out.println("   move to view adjacent rooms. 'move [ROOM]' to move there");
+		System.out.println("work [ROLE]");
+		System.out.println("   work to view available roles to take. 'work [ROLE]' to take role");
+		System.out.println("upgrade [TYPE] [RANK]");
+		System.out.println("   view possible upgrades while in casting office. 'ugrade [TYPE] [RANK]' to upgrade to a certain rank using money ($) or credits (cr).");
+		System.out.println("rehearse");
+		System.out.println("   rehearse a role");
+		System.out.println("act");
+		System.out.println("   act a role");
+		System.out.println("end");
+		System.out.println("   end your turn");
+	}
+	
 	
    /* Pre: Run at the beginning of every day.
    *  Post: Gives each SceneRoom a random card that has not been chosen yet this game.
@@ -288,6 +318,7 @@ class Deadwood{
             cardArray[i] = new Card(budget, roleOne, roleTwo, roleThree, title, description);
             i++;
         }
+       
         return cardArray;
     }
 	

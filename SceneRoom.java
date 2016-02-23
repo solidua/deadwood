@@ -4,8 +4,6 @@
 *  Holds scene information, a Card, and extra Roles.
 */
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SceneRoom extends Room {
 

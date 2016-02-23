@@ -4,7 +4,6 @@
 *     act, rehearse, move, upgrade rank, and roll dice.
 */
 import java.util.*;
-import java.lang.*;
 
 public class Player implements Dice{
 	private String name; 
@@ -14,7 +13,6 @@ public class Player implements Dice{
 	private boolean acting = false;
 	private int rehearsalCount = 0;
 	private Room position;
-	private boolean turnOver = false;
 	private Role currentRole = null; 
 	
 	//constructors
@@ -115,7 +113,6 @@ public class Player implements Dice{
    *        Returns false when it did not succeed, and true if it was successful.
    */
 	public boolean move(String dest){
-		turnOver = true;
 		if(!acting) {
 			Room[] moveOptions = this.position.getAdjacentRooms();
 			//display adjacent rooms 
@@ -263,15 +260,6 @@ public class Player implements Dice{
 		}
 	}
 
-   /* Pre: Accepts a string from System.in
-   *  Post: Returns that string sent to all lower case.
-   */
-	private String getInput(){
-		Scanner scanInput = new Scanner(System.in);
-		String input = scanInput.nextLine();
-		scanInput.close();
-		return input.toLowerCase();
-	}  
 
    /* Pre: A number of dice to roll.
    *  Post: Returns an array of the different values rolled by each die.
