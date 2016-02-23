@@ -1,4 +1,4 @@
-package deadwood1;
+//package deadwood1;
 
 public class Room {
 	protected String roomName;  

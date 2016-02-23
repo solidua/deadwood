@@ -70,18 +70,28 @@ public class SceneRoom extends Room {
 	public void displayRoles(int rank) {
 		Role[] cardRoles = currentCard.getRoles();
 		System.out.println("These are the starring roles you can take:");
+      boolean roleAvailable = false;
 		for(Role role : cardRoles) {         
 			if(!role.getTaken() && (role.getLevel() <= rank) && !(role.getName().equals("0"))) {
-				System.out.println("\t" + role.getName() + ": " + role.getPhrase());
-			} 
+				System.out.println("\t" + role.getName() + ": \"" + role.getPhrase()+ "\" which is level " + role.getLevel());
+            roleAvailable = true;
+			}
 		}
+      if(!roleAvailable){
+         System.out.println("\t" + "There are no starring roles you can take!");
+      }
 
 		System.out.println("These are the extra roles you can take:");
+      roleAvailable = false;
 		for(Role role: roomRoles) {
 			if(!role.getTaken() && (role.getLevel() <= rank) && !(role.getName().equals("0"))) {
-				System.out.println("\t" + role.getName());
+				System.out.println("\t" + role.getName() + ": \"" + role.getPhrase()+ "\" which is level " + role.getLevel());
+            roleAvailable = true;
 			} 
-		}	
+		}
+      if(!roleAvailable){
+         System.out.println("\t" + "There are no extra roles you can take!");
+      }	
 	}
 
 	public Role takeRole(String roleWanted, Player player) {

@@ -48,16 +48,16 @@ public class Player implements Dice{
 		return money;
 	}
 	
-	public int addMoney(int pay){
-		return (this.money + pay);
+	public void addMoney(int pay){
+      money = money + pay;
 	}
 	
 	public int getCredits() {
 		return credits; 
 	}
 	
-	public int addCredit(int pay){
-		return (this.credits + pay);
+	public void addCredit(int pay){
+      credits = credits + pay;  
 	}
 	
 	public boolean isActing(){
@@ -77,7 +77,7 @@ public class Player implements Dice{
 	}
 	
 	public void who(){
-		System.out.print(name + " " + "($" + money + "," + credits + "cr" + ")");
+		System.out.print(name + " " + "($" + money + "," + credits + "cr" + ")" + " Rank: " + rank);
 		if(currentRole != null) {
 			System.out.println(" working " + currentRole.getName() + ", " + currentRole.getPhrase());
 		} else {
