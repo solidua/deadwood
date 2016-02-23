@@ -1,5 +1,8 @@
-//package deadwood1;
-
+/* A2 CS345
+*  Deadwood.java
+*  Has main, where the game is run from.
+*  Has all the initialization functions and all players, rooms, and cards.
+*/
 import java.util.*;
 import java.util.Map.Entry;
 import java.lang.*;
@@ -13,7 +16,8 @@ class Deadwood{
 	static int numPlayers;
 	static int daysLeft = 4; 
 	
-	public static void main(String[] args) throws FileNotFoundException{      
+	public static void main(String[] args) throws FileNotFoundException{
+      //initializes rooms and cards
     	initGame(); 
     	System.out.println("Welcome to DeadWood");
     	
@@ -37,20 +41,22 @@ class Deadwood{
          }
     	in.nextLine(); 
     	
-    	//initialize
+    	//initialize players
     	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
     	
     	//game loop 
     	while (daysLeft != 0) {
     		System.out.println("There are " + daysLeft + " days left.");
-    		
-    		cardPicker(); 
+    		//gives each SceneRoom a card
+    		cardPicker();
+         //each player is moved to the trailers at the start of each day
     		for(Player player : players) {
     			player.setPosition(utilityRooms.get("trailers"));
     		}
     		
+         //the day is complete when there have been 9 scenes completed
     		int scenesShot = 0; 
-    		while (scenesShot < 2) {//Change this back to 9
+    		while (scenesShot < 9) {
     			int playerNum = 0; 
     			for(Player player : players) {
     				playerNum++; 
@@ -61,6 +67,8 @@ class Deadwood{
     				boolean turnOver = false; 
     				boolean moved = false; 
     				while(!turnOver) {
+                  //the following options are available as typed input for the player:
+                  //    who, where, move, work, upgrade, rehearse, act, or end.
     					String[] inputArray = input.split("\\s+");
     					switch(inputArray[0]) {
     					case "who":
@@ -144,6 +152,9 @@ class Deadwood{
     	calculateScores(); 
     }
 	
+   /* Pre: Run at the beginning of every day.
+   *  Post: Gives each SceneRoom a random card that has not been chosen yet this game.
+   */
 	private static void cardPicker() {
 		Random cardPicker = new Random(); 
 		for(Entry<String, SceneRoom> entry : sceneRooms.entrySet()) {
@@ -158,6 +169,9 @@ class Deadwood{
 		}
 	}
 	
+   /* Pre: Run at the end of the game.
+   *  Post: Prints the score of each player, and then the winner.
+   */
 	private static void calculateScores() {
 		int score = 0; 
 		int maxScore = 0;
@@ -183,13 +197,17 @@ class Deadwood{
 		return str.substring(1); 	
 	}
     
-	/*sets up the board*/
+    /* Pre: Accepts no arguments.
+    *  Post: Sets up the game.
+    */
     private static void initGame() throws FileNotFoundException {
     	cardArray = initCards();
     	initScenes();
 	}
     
-    /*returns a map of scene objects */
+    /* Pre: Accepts no arguments.
+    *  Post: Sets up two HashMaps, one for the SceneRooms and one for UtilityRooms.
+    */
     private static void initScenes() {
     	sceneRooms = new HashMap<String, SceneRoom>(); 
     	utilityRooms = new HashMap<String, UtilityRoom>(); 
@@ -240,7 +258,9 @@ class Deadwood{
     	utilityRooms.get("casting-office").setAdjacentRooms(new Room[]{trainStation, ranch, secretHideout});
     }
     
-    /*returns an array of cards*/
+   /* Pre: Accepts no input.
+   *  Post: Returns an array of all cards that exist in the game.
+   */
 	private static Card[] initCards () throws FileNotFoundException{
         File cardFile = new File("cards.txt");
         Scanner input = new Scanner(cardFile);
@@ -271,6 +291,9 @@ class Deadwood{
         return cardArray;
     }
 	
+   /* Pre: Takes the number of players wanted as inputted by the player, and the pointer to the trailer Room.
+   *  Post: Initializes the players, with different starting values based on the total number of players.
+   */
 	private static Player[] initPlayers(int numPlayers, UtilityRoom trailer) {
 		Player[] players = new Player[numPlayers];
 		int bonusCredit = 0; 
