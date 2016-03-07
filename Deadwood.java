@@ -25,7 +25,7 @@ class Deadwood extends JFrame{
       //initializes rooms and cards
     	initGame(); 
       JFrame frame = new gameBoard(); 
-      frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
+      frame.setDefaultCloseOperation(EXIT_ON_CLOSE );
       frame.pack();
       frame.setResizable(true);
       frame.setLocationRelativeTo( null );
