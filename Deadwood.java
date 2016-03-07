@@ -8,7 +8,11 @@
 import java.util.*;
 import java.util.Map.Entry;
 import java.io.*;
-class Deadwood{
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+class Deadwood extends JFrame{
 	
 	static Map<String, SceneRoom> sceneRooms;
 	static Map<String, UtilityRoom> utilityRooms; 
@@ -20,6 +24,14 @@ class Deadwood{
 	public static void main(String[] args) throws FileNotFoundException{
       //initializes rooms and cards
     	initGame(); 
+      JFrame frame = new gameBoard(); 
+      frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
+      frame.pack();
+      frame.setResizable(true);
+      frame.setLocationRelativeTo( null );
+      frame.setVisible(true);
+      
+      
     	System.out.println("Welcome to DeadWood");
     	System.out.println();
     	
@@ -356,4 +368,5 @@ class Deadwood{
 		
 		return players; 
 	}   
+   
 }
