@@ -11,6 +11,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.concurrent.*;
 import javax.swing.*;
 class Deadwood extends JFrame {
 	
@@ -33,45 +34,22 @@ class Deadwood extends JFrame {
       initGame(); 
       
       
-    	System.out.println("Welcome to DeadWood");
-    	System.out.println();
+    	//System.out.println("Welcome to DeadWood");
+    	//System.out.println();
+      frame.gameStart();
     	
       
       Scanner in = new Scanner(System.in);
-    	//prompts user for number of players 
-    	/*System.out.print("Please enter the number of player (2 - 8):");
-    	Scanner in = new Scanner(System.in);
-    	boolean okInput = false; 
-    	while (!okInput){
-            try{
-                numPlayers = in.nextInt();
-                if (numPlayers >= 2 && numPlayers <= 8){
-                   okInput = true;
-                }else{
-                   System.out.print("Please enter a value between 2 and 8: ");
-                   System.out.println();
-                }
-            }catch (InputMismatchException e){
-                System.out.println();
-                System.out.println("Invalid input... Exiting deadwood.");
-                System.exit(1);
-            }
-         }
-    	in.nextLine(); */
-    	
+    	//prompts user for number of players    	
     	//initialize players
-      try{
-      Thread.sleep(120000);
-      System.exit(1);
-      }
-      catch (InterruptedException e){
-    	players = initPlayers(frame.findPlayers(), utilityRooms.get("trailers")); 
-      }
+      numPlayers = frame.findPlayers();
+    	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
     	
     	//game loop 
     	while (daysLeft != 0) {
-    		System.out.println("There are " + daysLeft + " days left.");
-    		System.out.println();
+         frame.displayPlayerInfo(players, -1);
+    		/*System.out.println("There are " + daysLeft + " days left.");
+    		System.out.println();*/
     		//gives each SceneRoom a card
     		cardPicker();
          //each player is moved to the trailers at the start of each day
@@ -81,10 +59,11 @@ class Deadwood extends JFrame {
     		
          //the day is complete when there have been 9 scenes completed
     		int scenesShot = 0; 
-    		while (scenesShot < 9) {
+    		while (scenesShot < 9) {            
     			int playerNum = 0; 
     			for(Player player : players) {
-    				playerNum++; 
+               frame.displayPlayerInfo(players, playerNum);
+    				playerNum++;
     				System.out.println("Player" + playerNum + " it is your turn");
     				System.out.println("Type 'help' to view actions");
     				System.out.print("> ");
@@ -367,16 +346,13 @@ class Deadwood extends JFrame {
 			bonusRank = 2;
 			break; 
 		}
-		
-		
+				
 		for (int i = 0; i < numPlayers; i++) {
 			players[i] = new Player(trailer, "Player-" + (i + 1)); 
 			players[i].addCredit(bonusCredit); 
 			players[i].setRank(bonusRank); 
 		}
-      
-      //frame.layeredPane.info.add(new JLabel("B1"));
-		
+      		
 		return players; 
 	}   
    
