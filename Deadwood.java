@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
-class Deadwood extends JFrame{
+class Deadwood extends JFrame {
 	
 	static Map<String, SceneRoom> sceneRooms;
 	static Map<String, UtilityRoom> utilityRooms; 
@@ -20,23 +20,26 @@ class Deadwood extends JFrame{
 	static Player[] players; 
 	static int numPlayers;
 	static int daysLeft = 4; 
+   static gameBoard frame;
 	
 	public static void main(String[] args) throws FileNotFoundException{
-      //initializes rooms and cards
-    	initGame(); 
-      JFrame frame = new gameBoard(); 
+      //initializes rooms and cards   	
+      frame = new gameBoard(); 
       frame.setDefaultCloseOperation(EXIT_ON_CLOSE );
       frame.pack();
       frame.setResizable(true);
       frame.setLocationRelativeTo( null );
       frame.setVisible(true);
+      initGame(); 
       
       
     	System.out.println("Welcome to DeadWood");
     	System.out.println();
     	
+      
+      Scanner in = new Scanner(System.in);
     	//prompts user for number of players 
-    	System.out.print("Please enter the number of player (2 - 8):");
+    	/*System.out.print("Please enter the number of player (2 - 8):");
     	Scanner in = new Scanner(System.in);
     	boolean okInput = false; 
     	while (!okInput){
@@ -54,10 +57,16 @@ class Deadwood extends JFrame{
                 System.exit(1);
             }
          }
-    	in.nextLine(); 
+    	in.nextLine(); */
     	
     	//initialize players
-    	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
+      try{
+      Thread.sleep(120000);
+      System.exit(1);
+      }
+      catch (InterruptedException e){
+    	players = initPlayers(frame.findPlayers(), utilityRooms.get("trailers")); 
+      }
     	
     	//game loop 
     	while (daysLeft != 0) {
@@ -365,6 +374,8 @@ class Deadwood extends JFrame{
 			players[i].addCredit(bonusCredit); 
 			players[i].setRank(bonusRank); 
 		}
+      
+      //frame.layeredPane.info.add(new JLabel("B1"));
 		
 		return players; 
 	}   
