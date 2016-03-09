@@ -34,8 +34,8 @@ class Deadwood extends JFrame {
       initGame(); 
       
       
-    	//System.out.println("Welcome to DeadWood");
-    	//System.out.println();
+    	System.out.println("Welcome to DeadWood");
+    	System.out.println();
       frame.gameStart();
     	
       
@@ -44,12 +44,14 @@ class Deadwood extends JFrame {
     	//initialize players
       numPlayers = frame.findPlayers();
     	players = initPlayers(numPlayers, utilityRooms.get("trailers")); 
-    	
+      frame.makePlayerIcons(players);
+      
+      
     	//game loop 
     	while (daysLeft != 0) {
          frame.displayPlayerInfo(players, -1);
-    		/*System.out.println("There are " + daysLeft + " days left.");
-    		System.out.println();*/
+    		System.out.println("There are " + daysLeft + " days left.");
+    		System.out.println();
     		//gives each SceneRoom a card
     		cardPicker();
          //each player is moved to the trailers at the start of each day
@@ -68,7 +70,7 @@ class Deadwood extends JFrame {
     				System.out.println("Type 'help' to view actions");
     				System.out.print("> ");
 
-    				String input = in.nextLine(); 
+    				String input = in.nextLine();
     				boolean turnOver = false; 
     				boolean moved = false; 
     				while(!turnOver) {
